@@ -1,0 +1,109 @@
+﻿#main{
+    width:1024px;
+    position:relative;
+    margin:0 auto;
+    margin-top:0px;   
+    left:0px;/* posición del nav */
+    text-align:center;
+    height:13px;   
+}
+#header{ 
+    width:100%;
+    height:1px;
+	
+}
+/* -------- Menú de Navegación -------------------- */
+#nav{
+    margin:0 auto;
+    position:absolute;
+    top:0px; 
+    right:200px;/*margen con el div*/
+    color: #fff; 
+    height:29px;
+}
+#nav li{
+    color:#ffff;/*color base del texto*/ 
+    float:left;
+    width:11em;
+    margin:0;
+    padding:0;
+    list-style:none;
+    font:12px Verdana,Tahoma,Helvetica,Sans-serif;
+    text-align:center;
+    position:relative;
+    cursor:default;
+    line-height:18px;
+}
+#nav li ul{
+    padding-top:5px;/* referente a la parte superior */ 
+    margin:0;
+    background:#6a61d9;
+    border-radius:5px;
+}
+#nav li.menua_a{
+    text-decoration:none;
+    height:27px
+}
+#nav li.menua_a:hover{
+    text-decoration:none;
+    height:27px;
+    background: #6a61d9;//#d2231f;
+    border-radius:5px;
+    color:#fff;
+}
+#nav li.menua_a a:hover{
+    color:#fff;
+}
+
+#nav li a{ 
+    color: #ffffff; 
+    font-weight: bold;
+}
+#nav li a:hover{
+    text-decoration:none;
+    color:#F82533;
+}
+#nav li li a:hover{
+    text-decoration:none;
+    color:#F82533;
+}
+#nav li li{
+    filter:Alpha(opacity=100,finishopacity=100,style=1);/* Transparencia en Internet Explorer */
+}
+
+#nav li li:hover{}
+#nav li li a{    /* color de las opciones del menu*/
+    display:block;
+    font-weight: bold;
+    font-size:10px;
+    background-color: #6a61d9;/*rojo del menú*/
+    //line-height:18px;
+    border-bottom: 1px solid #ffffff;
+    color:#fff
+}
+#nav li li a:hover{
+    color:#F82533;
+    text-decoration:none;
+    background-color: #291bca;
+    /*background:transparent url(navhover.png) 0px 0px repeat scroll;*//* Transparencia en Otros navegadores */
+}
+li ul{
+    padding:0px;
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0;
+}
+li>ul{
+    top:auto;
+    left:auto;
+}
+li li{
+    float:left;
+    border:0;
+    display:block;
+    /*background:transparent;*/
+}
+li:hover ul,li.over ul{
+    display:block;
+}
