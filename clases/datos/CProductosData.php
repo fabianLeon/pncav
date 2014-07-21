@@ -79,8 +79,7 @@ class CProductosData {
                 $productos[$cont]['familia']=$w['Descripcion_Familia'];
                 $productos[$cont]['cantidad']=$w['cantidad_produ'];
                 $productos[$cont]['descripcion']=$w['descripcion_produc'];
-                $productos[$cont]['valorUni']=$w['valor_produc'];
-                $productos[$cont]['valorTotal']=$w['valor_produc']*$w['cantidad_produ'];
+                $productos[$cont]['valor']=$w['valor_produc'];
                 $cont++;
             }
         }
@@ -94,7 +93,7 @@ class CProductosData {
     }
     
     function eliminarByOrden($id){
-        $r=$this->database->eliminarMultiplesRegistros("productos","id_orden = $id");
+        $r=$this->database->borrarRegistro("productos","id_orden = $id");
         if($r!=0) return true;
         return false;
     }

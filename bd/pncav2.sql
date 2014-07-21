@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-07-2014 a las 20:17:34
+-- Tiempo de generación: 22-07-2014 a las 01:31:18
 -- Versión del servidor: 5.6.16
 -- Versión de PHP: 5.5.11
 
@@ -23,6 +23,65 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `actividades`
+--
+
+CREATE TABLE IF NOT EXISTS `actividades` (
+  `Id_Actividad` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Indica el Identificador del objeto actividad',
+  `Descripcion_Actividad` varchar(100) NOT NULL COMMENT 'Corresponde a la descripción de la actividad ',
+  `Monto_Actividad` bigint(20) NOT NULL COMMENT 'Corresponde al monto de la actividad',
+  `Id_Tipo` int(2) NOT NULL COMMENT 'Indica el identificador del tipo de la actividad ',
+  PRIMARY KEY (`Id_Actividad`),
+  KEY `Id_Tipo` (`Id_Tipo`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `actividades_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `actividades_tipo` (
+  `Id_Tipo` int(2) NOT NULL AUTO_INCREMENT,
+  `Descripcion_Tipo` varchar(70) NOT NULL,
+  PRIMARY KEY (`Id_Tipo`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Volcado de datos para la tabla `actividades_tipo`
+--
+
+INSERT INTO `actividades_tipo` (`Id_Tipo`, `Descripcion_Tipo`) VALUES
+(1, ' Plan de Integración: Suministros e Instalaciones (P.I.S.I.)'),
+(2, 'Plan de Inversión del Anticipo (P.I.A.)');
+
+--
+-- Disparadores `actividades_tipo`
+--
+DROP TRIGGER IF EXISTS `prevent_delete_PIA`;
+DELIMITER //
+CREATE TRIGGER `prevent_delete_PIA` BEFORE DELETE ON `actividades_tipo`
+ FOR EACH ROW BEGIN 
+IF (OLD.Id_Tipo=2) THEN
+   CALL raise_application_error(-20101,'No puede borrar este registro');
+   END IF;
+END
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `prevent_update_PIA`;
+DELIMITER //
+CREATE TRIGGER `prevent_update_PIA` BEFORE UPDATE ON `actividades_tipo`
+ FOR EACH ROW BEGIN
+IF (OLD.Id_Tipo = 2) THEN 
+	CALL raise_application_error(-20102,'El registro no debe ser eliminado');
+    END IF;
+END
+//
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `ciudad`
 --
 
@@ -33,18 +92,7 @@ CREATE TABLE IF NOT EXISTS `ciudad` (
   PRIMARY KEY (`Id_Ciudad`),
   UNIQUE KEY `Nombre_Ciudad` (`Nombre_Ciudad`),
   KEY `Id_Pais` (`Id_Pais`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Tabla para almacenar las ciudades usadas dentro del sistema' AUTO_INCREMENT=22 ;
-
---
--- Volcado de datos para la tabla `ciudad`
---
-
-INSERT INTO `ciudad` (`Id_Ciudad`, `Id_Pais`, `Nombre_Ciudad`) VALUES
-(10, 3, 'LOS ANGELES'),
-(11, 3, 'NEW YORK'),
-(19, 8, 'CALI'),
-(20, 8, 'Bogotá'),
-(21, 8, 'Medellín');
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Tabla para almacenar las ciudades usadas dentro del sistema' AUTO_INCREMENT=25 ;
 
 -- --------------------------------------------------------
 
@@ -670,6 +718,41 @@ INSERT INTO `compromiso_responsable` (`cor_id`, `com_id`, `usu_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `cuentas_financiero`
+--
+
+CREATE TABLE IF NOT EXISTS `cuentas_financiero` (
+  `cfi_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la cuenta',
+  `cfi_numero` int(15) NOT NULL COMMENT 'numero de la cuenta',
+  `cfi_nombre` varchar(50) NOT NULL COMMENT 'nombre de la cuenta',
+  `cft_id` int(11) NOT NULL COMMENT 'tipo cuenta',
+  PRIMARY KEY (`cfi_id`),
+  KEY `fk_cuentas_tipo` (`cft_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='cuentas del módulo financiero' AUTO_INCREMENT=14 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cuentas_financiero_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `cuentas_financiero_tipo` (
+  `cft_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del tipo de cuenta',
+  `cft_nombre` varchar(30) NOT NULL COMMENT 'nombre del tipo de cuenta',
+  PRIMARY KEY (`cft_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Volcado de datos para la tabla `cuentas_financiero_tipo`
+--
+
+INSERT INTO `cuentas_financiero_tipo` (`cft_id`, `cft_nombre`) VALUES
+(1, 'Cartera colectiva'),
+(2, 'Cuentas asociadas');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `departamento`
 --
 
@@ -721,6 +804,31 @@ INSERT INTO `departamento_region` (`der_id`, `der_nombre`) VALUES
 (2, 'Orinoquia'),
 (3, 'Andina'),
 (4, 'Pacifica');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `desembolso`
+--
+
+CREATE TABLE IF NOT EXISTS `desembolso` (
+  `des_id` varchar(15) NOT NULL COMMENT 'Identificado único de desembolso',
+  `des_fecha` date NOT NULL COMMENT 'Fecha de concepto de desembolso',
+  `des_ano_vigencia` int(4) NOT NULL,
+  `des_documento` varchar(400) DEFAULT NULL COMMENT 'Nombre del documento soporte del desembolso',
+  `des_condiciones` varchar(400) DEFAULT NULL COMMENT 'Nombre del archivo de condiciones del desembolso',
+  `des_porcentaje` double NOT NULL COMMENT 'porcentaje de desembolso',
+  `des_aprobado` double NOT NULL COMMENT 'Cantidad de desembolso aprovado',
+  `des_porcentaje_amortizacion` double NOT NULL COMMENT 'Porcentaje de amortización',
+  `des_amortizacion` double NOT NULL COMMENT 'Cantidad de amortización',
+  `des_fecha_cumplimiento` date NOT NULL COMMENT 'Fecha de cumplimiento',
+  `des_fecha_tramite` date NOT NULL COMMENT 'Fecha de trámite',
+  `des_fecha_efectiva` date NOT NULL COMMENT 'Fecha efectiva del desembolso',
+  `des_fecha_limite` date NOT NULL COMMENT 'Fecha límite de desembolso',
+  `des_efectuado` double NOT NULL COMMENT 'Total efectuado',
+  `des_observaciones` varchar(500) NOT NULL COMMENT 'Observaciones del desembolso',
+  PRIMARY KEY (`des_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tabla para almacenar la información de los desembolsos';
 
 -- --------------------------------------------------------
 
@@ -2195,6 +2303,100 @@ INSERT INTO `encuesta_validar_inspeccion` (`evi_id`, `evi_nombre`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `extracto_financiero`
+--
+
+CREATE TABLE IF NOT EXISTS `extracto_financiero` (
+  `efi_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id único del extracto',
+  `cfi_id` int(11) NOT NULL COMMENT 'id de la cuenta a la que pertenece el extracto',
+  `efi_mes` int(2) NOT NULL COMMENT 'mes del extracto',
+  `efi_anio` int(4) NOT NULL COMMENT 'año del extracto',
+  `efi_saldo_inicial` double NOT NULL COMMENT 'saldo inicial del extracto',
+  `efi_incrementos` double NOT NULL COMMENT 'incrementos del extracto según fiduciara',
+  `efi_disminuciones` double NOT NULL COMMENT 'disminuciones del extracto según fiduciara',
+  `efi_saldo_final` double NOT NULL COMMENT 'saldo final del extracto',
+  `efi_rentabilidad` float NOT NULL COMMENT 'rentabilidad calculada para el extracto',
+  `efi_observaciones` text NOT NULL COMMENT 'observaciones realizadas al extracto',
+  `efi_documento_soporte` varchar(256) NOT NULL COMMENT 'archivo de soporte del extracto',
+  `efi_documento_movimientos` varchar(256) NOT NULL COMMENT 'hoja de calculo con los movimientos asociados al extracto',
+  PRIMARY KEY (`efi_id`),
+  KEY `fk_extracto_cuenta` (`cfi_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de extractos financieros' AUTO_INCREMENT=20 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `extracto_financiero_int`
+--
+
+CREATE TABLE IF NOT EXISTS `extracto_financiero_int` (
+  `efi_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id único del extracto',
+  `cfi_id` int(11) NOT NULL COMMENT 'id de la cuenta a la que pertenece el extracto',
+  `efi_mes` int(2) NOT NULL COMMENT 'mes del extracto',
+  `efi_anio` int(4) NOT NULL COMMENT 'año del extracto',
+  `efi_saldo_inicial` double NOT NULL COMMENT 'saldo inicial del extracto',
+  `efi_incrementos` double NOT NULL COMMENT 'incrementos del extracto según fiduciara',
+  `efi_disminuciones` double NOT NULL COMMENT 'disminuciones del extracto según fiduciara',
+  `efi_saldo_final` double NOT NULL COMMENT 'saldo final del extracto',
+  `efi_rentabilidad` float NOT NULL COMMENT 'rentabilidad calculada para el extracto',
+  `efi_observaciones` text NOT NULL COMMENT 'observaciones realizadas al extracto',
+  `efi_documento_soporte` varchar(256) NOT NULL COMMENT 'archivo de soporte del extracto',
+  `efi_documento_movimientos` varchar(256) NOT NULL COMMENT 'hoja de calculo con los movimientos asociados al extracto',
+  PRIMARY KEY (`efi_id`),
+  KEY `fk_extracto_cuenta` (`cfi_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `familias`
+--
+
+CREATE TABLE IF NOT EXISTS `familias` (
+  `Id_Familia` int(11) NOT NULL AUTO_INCREMENT,
+  `Descripcion_Familia` varchar(40) NOT NULL,
+  PRIMARY KEY (`Id_Familia`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `informe_financiero`
+--
+
+CREATE TABLE IF NOT EXISTS `informe_financiero` (
+  `ifi_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador unico e incrementarl de informe',
+  `ifi_numero_factura` varchar(15) NOT NULL COMMENT 'Numero identificador unico de la factura a ingresar.',
+  `ifi_fecha_factura` date NOT NULL COMMENT 'Fecha registrada en la factura.',
+  `ifi_numero_radicado_ministerio` varchar(15) NOT NULL COMMENT 'Número asignado en un radicado por el ministerio.',
+  `ifi_documento_soporte` varchar(40) NOT NULL COMMENT 'Comunicado, documento digital que soporta la factura.',
+  `ifi_descripcion` varchar(200) NOT NULL COMMENT 'Una pequeña descripcion de la factura',
+  `ifi_valor_factura` int(15) NOT NULL COMMENT 'Valor o costo total que aparece en la factura.',
+  `ifi_amortizacion` int(15) NOT NULL,
+  `ifi_saldo_pendiente_AA` int(15) NOT NULL COMMENT 'Es la suma de todas las actividades menos la amortizacion',
+  `ifi_observaciones` varchar(200) DEFAULT NULL COMMENT 'Observaciones sobre la factura',
+  `ifi_saldo_contrato` int(15) NOT NULL COMMENT 'Es el resultado del Saldo del contrato menos el valor de la factura',
+  PRIMARY KEY (`ifi_id`),
+  UNIQUE KEY `ifi_numero_factura` (`ifi_numero_factura`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ingresos`
+--
+
+CREATE TABLE IF NOT EXISTS `ingresos` (
+  `Id_Ingreso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Este campo corresponde al identificador de los ingresos y sera su llave primaria',
+  `A_Ingreso` year(4) NOT NULL COMMENT 'Este campo indica el año en que el ingreso fue recibido',
+  `Monto_Ingreso` bigint(20) NOT NULL COMMENT 'Corresponde al monto de ingreso registrado',
+  `Tipo_Ingreso` varchar(8) NOT NULL COMMENT 'Este campo indica el tipo de ingreso, las opciones son vigencia y adicion',
+  PRIMARY KEY (`Id_Ingreso`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `instrumento`
 --
 
@@ -3432,7 +3634,7 @@ CREATE TABLE IF NOT EXISTS `monedas` (
   `Id_Moneda` int(11) NOT NULL AUTO_INCREMENT,
   `Descripcion_Moneda` varchar(30) NOT NULL,
   PRIMARY KEY (`Id_Moneda`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Volcado de datos para la tabla `monedas`
@@ -3606,6 +3808,35 @@ INSERT INTO `operador` (`ope_id`, `ope_nombre`, `ope_sigla`, `ope_contrato_no`, 
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `ordenesdepago`
+--
+
+CREATE TABLE IF NOT EXISTS `ordenesdepago` (
+  `Id_Orden_Pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Correspondel al Id de la orden de pago.',
+  `Id_Tipo_Actividad` int(2) NOT NULL COMMENT 'Corresponde al Id del tipo de actividad de la tabla actividades_tipo',
+  `Id_Actividad` int(11) NOT NULL COMMENT 'Corresponde al Id de la actividad de la tabla actividades.',
+  `Numero_Orden_Pago` varchar(10) NOT NULL COMMENT 'Indica el numero de la orden de pago.',
+  `Fecha_Orden_Pago` date NOT NULL COMMENT 'Corresponde a la fecha en que se ingresa la orden de pago',
+  `Numero_Factura` varchar(10) NOT NULL COMMENT 'Indica el numero de la factura de la orden de pago',
+  `Id_Proveedor` int(11) NOT NULL COMMENT 'Corresponde al Id del provedor de la tabla de proveedores',
+  `Id_Moneda_Orden` int(1) NOT NULL COMMENT 'Corresponde al Id de la moneda de la tabla monedas',
+  `Tasa_Orden` float NOT NULL COMMENT 'Indica la Tasa de la moneda',
+  `valor_total` bigint(15) NOT NULL COMMENT 'Correponde al valor total de la orden de pago',
+  `Id_Estado_Orden` int(11) NOT NULL COMMENT 'Indica el Id del estado de la tabla estados_ordenes',
+  `Fecha_Pago_Orden` date DEFAULT NULL COMMENT 'Corresponde a la fecha de pago ingresada por el usuario si esta estado es pagado si no se deja pendiente',
+  `Observaciones_Orden` varchar(500) DEFAULT NULL COMMENT 'Corresponde a las observaciones que el usuario desee ingresar respecto a la orden de pago',
+  `Archivo_Orden` varchar(400) DEFAULT NULL COMMENT 'Hace referencia al nombre del archivo almacenado',
+  `cobro_proveedor_reintegro` varchar(10) DEFAULT NULL COMMENT 'Campo que guardará los Números de cuenta de cobro del proveesor',
+  PRIMARY KEY (`Id_Orden_Pago`),
+  KEY `Id_Tipo_Actividad` (`Id_Tipo_Actividad`),
+  KEY `Id_Actividad` (`Id_Actividad`),
+  KEY `Id_Proveedor` (`Id_Proveedor`),
+  KEY `Id_Moneda_Orden` (`Id_Moneda_Orden`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `pais`
 --
 
@@ -3615,16 +3846,7 @@ CREATE TABLE IF NOT EXISTS `pais` (
   PRIMARY KEY (`Id_Pais`),
   UNIQUE KEY `Nombre_Pais` (`Nombre_Pais`),
   UNIQUE KEY `Nombre_Pais_2` (`Nombre_Pais`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Esta tabla guarda los paises que serán registrados en el sistema' AUTO_INCREMENT=9 ;
-
---
--- Volcado de datos para la tabla `pais`
---
-
-INSERT INTO `pais` (`Id_Pais`, `Nombre_Pais`) VALUES
-(8, 'Colombia'),
-(4, 'CONGO'),
-(3, 'ESTADOS UNIDOS');
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Esta tabla guarda los paises que serán registrados en el sistema' AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
@@ -3817,15 +4039,7 @@ CREATE TABLE IF NOT EXISTS `proveedores` (
   `Email_Prove` varchar(40) NOT NULL,
   PRIMARY KEY (`Id_Prove`),
   UNIQUE KEY `Nit_Prove` (`Nit_Prove`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
-
---
--- Volcado de datos para la tabla `proveedores`
---
-
-INSERT INTO `proveedores` (`Id_Prove`, `Nit_Prove`, `Nombre_Prove`, `Telefono_Prove`, `Pais_Prove`, `Ciudad_Prove`, `Direcc_Prove`, `Nom_Contac_Prove`, `ApellA_Contac`, `ApellB_Contac`, `Tel_Contac_Prove`, `Email_Prove`) VALUES
-(2, '900685106', 'ANDITEL', '7430509', 8, 20, 'Cra 29.C No. 71A-48', 'CARLOS ERNESTO ', 'AGUIRRE ', 'RICO', '7430509', 'gerencia@anditel.com.co'),
-(3, '9003964766', 'Proyectos Amigables de Ingenieria S.A.S ccccccccccccc', '5744484750', 8, 21, 'Calle 33A No. 71-83', 'Humberto ', 'Cuartas ', 'Cardona', '3124169347', 'info@praming.com.co');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3901,6 +4115,56 @@ INSERT INTO `recomendaciones_responsable` (`cor_id`, `com_id`, `usu_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `rendimiento_financiero`
+--
+
+CREATE TABLE IF NOT EXISTS `rendimiento_financiero` (
+  `rfi_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del rendimiento financiero',
+  `cfi_id` int(11) NOT NULL COMMENT 'cuenta del rendimiento',
+  `rfi_mes` int(11) NOT NULL COMMENT 'mes del rendimiento financiero',
+  `rfi_anio` int(11) NOT NULL COMMENT 'año del rendimiento financiero',
+  `rfi_rendimiento_financiero` double NOT NULL COMMENT 'plata del rendimiento financiero',
+  `rfi_descuentos` double NOT NULL COMMENT 'descuentos sobre el rendimiento fiduciario',
+  `rfi_rendimiento_consignado` double NOT NULL COMMENT 'rendimiento financiero menos descuentos',
+  `rfi_rendimiento_acumulado` double NOT NULL COMMENT 'rendimiento acumulado en meses anteriores',
+  `rfi_rentabilidad_tasa` float NOT NULL COMMENT 'tasa de rentabilidad del rendimiento financiero',
+  `rfi_fecha_consignacion` date NOT NULL COMMENT 'fecha de consignación',
+  `rfi_comprobante_consignacion` varchar(250) NOT NULL COMMENT 'documento soporte de consignación',
+  `rfi_comprobante_emision` varchar(250) NOT NULL COMMENT 'documento soporte emisión FONTIC',
+  `rfi_valor_fiduciaria` double NOT NULL COMMENT 'valor enviado por la fiduciaria',
+  `erf_id` int(11) NOT NULL COMMENT 'id del estado del rendimiento',
+  `rfi_observaciones` text NOT NULL COMMENT 'observaciones del rendimiento financiero',
+  PRIMARY KEY (`rfi_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rendimiento_financiero_int`
+--
+
+CREATE TABLE IF NOT EXISTS `rendimiento_financiero_int` (
+  `rfi_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del rendimiento financiero',
+  `cfi_id` int(11) NOT NULL COMMENT 'cuenta del rendimiento',
+  `rfi_mes` int(11) NOT NULL COMMENT 'mes del rendimiento financiero',
+  `rfi_anio` int(11) NOT NULL COMMENT 'año del rendimiento financiero',
+  `rfi_rendimiento_financiero` double NOT NULL COMMENT 'plata del rendimiento financiero',
+  `rfi_descuentos` double NOT NULL COMMENT 'descuentos sobre el rendimiento fiduciario',
+  `rfi_rendimiento_consignado` double NOT NULL COMMENT 'rendimiento financiero menos descuentos',
+  `rfi_rendimiento_acumulado` double NOT NULL COMMENT 'rendimiento acumulado en meses anteriores',
+  `rfi_rentabilidad_tasa` float NOT NULL COMMENT 'tasa de rentabilidad del rendimiento financiero',
+  `rfi_fecha_consignacion` date NOT NULL COMMENT 'fecha de consignación',
+  `rfi_comprobante_consignacion` varchar(250) NOT NULL COMMENT 'documento soporte de consignación',
+  `rfi_comprobante_emision` varchar(250) NOT NULL COMMENT 'documento soporte emisión FONTIC',
+  `rfi_valor_fiduciaria` double NOT NULL COMMENT 'valor enviado por la fiduciaria',
+  `erf_id` int(11) NOT NULL COMMENT 'id del estado del rendimiento',
+  `rfi_observaciones` text NOT NULL COMMENT 'observaciones del rendimiento financiero',
+  PRIMARY KEY (`rfi_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuario`
 --
 
@@ -3927,7 +4191,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 --
 
 INSERT INTO `usuario` (`usu_id`, `per_id`, `usu_login`, `usu_clave`, `usu_nombre`, `usu_apellido`, `usu_documento`, `usu_telefono`, `usu_celular`, `usu_correo`, `usu_estado`, `usu_fecha_ultimo_ingreso`) VALUES
-(1, 1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Usuario', 'Administrador', '123456', '12336655', '3158989898', 'admin@mail.com', 1, '2014-07-18'),
+(1, 1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Usuario', 'Administrador', '123456', '12336655', '3158989898', 'admin@mail.com', 1, '2014-07-21'),
 (64, 2, 'consulta', '5d76beffe761403531a6eb339e0f0231', 'consulta', 'consulta', '63526847', '74563987', '3000000000', 'xxx@redcom.com.co', 1, '2014-06-13'),
 (66, 1, 'gramirez', '3b7523b92474628b33d3b22bcea3c0b4', 'German', 'Ramirez', '5555432', '32145870', '3144575984', 'asi.pncav@serticsas.com.co', 1, '2014-07-17'),
 (68, 2, 'dclavijo', 'e3f7132e274902c456b4a4e4be9006da', 'Diana', 'Clavijo', '11111111', '34567890', '3111111111', 'asji.pncav@serticsas.com.co', 1, '2014-07-17'),
@@ -3958,9 +4222,35 @@ INSERT INTO `usuario` (`usu_id`, `per_id`, `usu_login`, `usu_clave`, `usu_nombre
 (94, 1, 'Sertic S.A.S.', '8b4f978328def7f01f5cf2433b471d47', 'SERTIC', 'S.A.S', '45896741', '68598748', '3143568952', 'dti.pncav@serticsas.com.co', 1, '2014-07-09'),
 (95, 2, 'fromero', '1cff0f05de9d181a4f45bb0d18b70592', 'FABIO', 'ROMERO', '5555555', '26587987', '3125478974', 'aoc.pncav@serticsas.com', 1, '2014-07-10');
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `utilidades`
+--
+
+CREATE TABLE IF NOT EXISTS `utilidades` (
+  `id_utilidad` varchar(11) NOT NULL COMMENT 'Corresponde al Id unico de cada una de las utilidades',
+  `fecha_comuni` date NOT NULL COMMENT 'Corresponde a la fecha del comunicado',
+  `ano_vigencia` int(4) NOT NULL,
+  `doc_soporte_comuni` varchar(50) NOT NULL COMMENT 'Hace referencia al documento soporte del comunicado',
+  `porcen_utiliacion` float(5,2) NOT NULL COMMENT 'Indica el porcentaje de utilizacion aprobado',
+  `uti_aprobada` bigint(20) NOT NULL COMMENT 'Indica la utilidad aprobada',
+  `fecha_comi_fidu` date NOT NULL COMMENT 'Corresponde a la fecha de comite fiduciario',
+  `num_comi_fidu` bigint(10) NOT NULL COMMENT 'Indica el numero del comité fiduciario',
+  `doc_soporte_act` varchar(400) NOT NULL COMMENT 'Hace referencia al documento soporte acta',
+  `comen_utilidades` varchar(400) NOT NULL COMMENT 'Corresponde a los comentarios del comunicado',
+  PRIMARY KEY (`id_utilidad`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  ADD CONSTRAINT `actividades_ibfk_1` FOREIGN KEY (`Id_Tipo`) REFERENCES `actividades_tipo` (`Id_Tipo`);
 
 --
 -- Filtros para la tabla `compromiso`
@@ -3976,6 +4266,12 @@ ALTER TABLE `compromiso`
 ALTER TABLE `compromiso_responsable`
   ADD CONSTRAINT `fk_compromiso_responsable_compromiso` FOREIGN KEY (`com_id`) REFERENCES `compromiso` (`com_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `FK_compromiso_responsable_usuario` FOREIGN KEY (`usu_id`) REFERENCES `usuario` (`usu_id`);
+
+--
+-- Filtros para la tabla `cuentas_financiero`
+--
+ALTER TABLE `cuentas_financiero`
+  ADD CONSTRAINT `fk_cuentas_tipo` FOREIGN KEY (`cft_id`) REFERENCES `cuentas_financiero_tipo` (`cft_id`);
 
 --
 -- Filtros para la tabla `departamento`
@@ -4030,6 +4326,12 @@ ALTER TABLE `eje`
   ADD CONSTRAINT `fk_Eje_Instrumento1` FOREIGN KEY (`ins_id`) REFERENCES `instrumento` (`ins_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
+-- Filtros para la tabla `extracto_financiero`
+--
+ALTER TABLE `extracto_financiero`
+  ADD CONSTRAINT `fk_extracto_cuenta` FOREIGN KEY (`cfi_id`) REFERENCES `cuentas_financiero` (`cfi_id`);
+
+--
 -- Filtros para la tabla `instrumento`
 --
 ALTER TABLE `instrumento`
@@ -4052,6 +4354,15 @@ ALTER TABLE `municipio`
 --
 ALTER TABLE `opcion`
   ADD CONSTRAINT `FK_opcion_nivel` FOREIGN KEY (`opn_id`) REFERENCES `opcion_nivel` (`opn_id`);
+
+--
+-- Filtros para la tabla `ordenesdepago`
+--
+ALTER TABLE `ordenesdepago`
+  ADD CONSTRAINT `ordenesdepago_ibfk_1` FOREIGN KEY (`Id_Tipo_Actividad`) REFERENCES `actividades_tipo` (`Id_Tipo`),
+  ADD CONSTRAINT `ordenesdepago_ibfk_2` FOREIGN KEY (`Id_Actividad`) REFERENCES `actividades` (`Id_Actividad`),
+  ADD CONSTRAINT `ordenesdepago_ibfk_3` FOREIGN KEY (`Id_Proveedor`) REFERENCES `proveedores` (`Id_Prove`),
+  ADD CONSTRAINT `ordenesdepago_ibfk_4` FOREIGN KEY (`Id_Moneda_Orden`) REFERENCES `monedas` (`Id_Moneda`);
 
 --
 -- Filtros para la tabla `perfil_x_opcion`

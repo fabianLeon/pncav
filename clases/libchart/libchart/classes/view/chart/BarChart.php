@@ -45,8 +45,8 @@
          * @param integer width of the image
          * @param integer height of the image
          */
-        protected function BarChart($width, $height) {
-            parent::Chart($width, $height);
+        protected function BarChart($width, $height, $padd=0) {
+            parent::Chart($width, $height, $padd);
 
             // Initialize the bounds
             $this->bound = new Bound();

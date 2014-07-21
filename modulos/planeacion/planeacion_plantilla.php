@@ -11,6 +11,7 @@ header("Content-Disposition: attachment; filename=Plantilla_planeacion.xls");
 
 error_reporting(E_ALL - E_NOTICE - E_DEPRECATED - E_WARNING);
 require('../../clases/datos/CPlaneacionData.php');
+require_once '../../clases/aplicacion/CDataLog.php';
 require('../../clases/datos/CData.php');
 require('../../clases/interfaz/CHtml.php');
 // Incluimos el archivo de configuracion
@@ -25,7 +26,8 @@ $operador = OPERADOR_DEFECTO;
 
 echo "<table width='80%' border='1' align='center'>";
 echo "<tr>";
-echo "<th>" . $html->traducirTildes(PLANEACION_MUNICIPIO) . "</th>
+echo "<th>" . $html->traducirTildes(PLANEACION_CODIGO_EJE) . "</th>
+        <th>" . $html->traducirTildes(PLANEACION_MUNICIPIO) . "</th>
 	<th>" . $html->traducirTildes(PLANEACION_EJE) . "</th>
         <th>" . $html->traducirTildes(PLANEACION_NUMERO_ENCUESTAS) . "</th>        
         <th>" . $html->traducirTildes(PLANEACION_FECHA_INICIO) . "</th>

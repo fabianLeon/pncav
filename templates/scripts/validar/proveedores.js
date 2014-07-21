@@ -1,7 +1,9 @@
 function validar_agregar_proveedor(){
 	
     
-        if(document.getElementById('txt_nit_proveedor').value=='' || !validarEntero(document.getElementById('txt_nit_proveedor').value) || document.getElementById('txt_nit_proveedor').value.length>15){
+        if(document.getElementById('txt_nit_proveedor').value=='' || 
+                !validarEntero(document.getElementById('txt_nit_proveedor').value) || 
+                document.getElementById('txt_nit_proveedor').value.length>15){
 		mostrarDiv('error_nit');	
 		return false;
 	}
@@ -11,7 +13,9 @@ function validar_agregar_proveedor(){
 		mostrarDiv('error_nombre');	
 		return false;
 	}
-	if(document.getElementById('txt_telefono_proveedor').value=='' ||!validarEntero(document.getElementById('txt_telefono_proveedor').value)|| (document.getElementById('txt_telefono_proveedor').value.length < 6)){
+	if(document.getElementById('txt_telefono_proveedor').value=='' ||
+                !validarEntero(document.getElementById('txt_telefono_proveedor').value)|| 
+                (document.getElementById('txt_telefono_proveedor').value.length < 7)){
 		mostrarDiv('error_telefono');	 
 		return false;
 	}
@@ -38,7 +42,9 @@ function validar_agregar_proveedor(){
 	if(document.getElementById('txt_ApB_contac_proveedor').value==''){
 		ocultarDiv('error_oculto');
 	}
-	if(document.getElementById('txt_tel_contac_proveedor').value=='' || !validarEntero(document.getElementById('txt_tel_contac_proveedor').value)|| (document.getElementById('txt_tel_contac_proveedor').value.length < 6 )){
+	if(document.getElementById('txt_tel_contac_proveedor').value=='' || 
+                !validarEntero(document.getElementById('txt_tel_contac_proveedor').value)|| 
+                (document.getElementById('txt_tel_contac_proveedor').value.length < 6 )){
 		mostrarDiv('error_telcontac');	
 		return false;
 	}	
@@ -51,8 +57,9 @@ function validar_agregar_proveedor(){
 }
 function validar_agregar_proveedor_remoto(form){
 	
-    
-        if(document.getElementById('txt_nit_proveedor').value=='' || !validarEntero(document.getElementById('txt_nit_proveedor').value) || (document.getElementById('txt_nit_proveedor').value.length != 9 && document.getElementById('txt_nit_proveedor').value.length!=11)){
+     if(document.getElementById('txt_nit_proveedor').value=='' || 
+             !validarEntero(document.getElementById('txt_nit_proveedor').value) || 
+             document.getElementById('txt_nit_proveedor').value.length>15){
 		mostrarDiv('error_nit');	
 		return false;
 	}
@@ -62,16 +69,19 @@ function validar_agregar_proveedor_remoto(form){
 		mostrarDiv('error_nombre');	
 		return false;
 	}
-	if(document.getElementById('txt_telefono_proveedor').value=='' ||!validarEntero(document.getElementById('txt_telefono_proveedor').value)|| (document.getElementById('txt_telefono_proveedor').value.length < 6 )){
+	if(document.getElementById('txt_telefono_proveedor').value=='' ||
+                !validarEntero(document.getElementById('txt_telefono_proveedor').value)|| 
+                (document.getElementById('txt_telefono_proveedor').value.length < 7)){
 		mostrarDiv('error_telefono');	 
 		return false;
 	}
-	if(document.getElementById('txt_pais_proveedor').value==''){
+        alert('entro');
+	if(document.getElementById('sel_pais_proveedor').value=='-1'){
 		mostrarDiv('error_pais');	
 		return false;
 	}
-	if(document.getElementById('txt_ciudad_proveedor').value==''){
-		mostrarDiv('error_ciudad');	
+	if(document.getElementById('sel_ciudad_proveedor').value=='-1'){
+		mostrarDiv('error_cuidad');	
 		return false;
 	}
 	if(document.getElementById('txt_direccion_proveedor').value==''){
@@ -86,30 +96,37 @@ function validar_agregar_proveedor_remoto(form){
 		mostrarDiv('error_contacprove_apellido');	
 		return false;
 	}
-        if(document.getElementById('txt_ApB_contac_proveedor').value==''){
+	if(document.getElementById('txt_ApB_contac_proveedor').value==''){
 		ocultarDiv('error_oculto');
 	}
-	if(document.getElementById('txt_tel_contac_proveedor').value=='' || !validarEntero(document.getElementById('txt_tel_contac_proveedor').value)|| (document.getElementById('txt_tel_contac_proveedor').value.length <6 )){
+	if(document.getElementById('txt_tel_contac_proveedor').value=='' || 
+                !validarEntero(document.getElementById('txt_tel_contac_proveedor').value)|| 
+                (document.getElementById('txt_tel_contac_proveedor').value.length < 6 )){
 		mostrarDiv('error_telcontac');	
 		return false;
 	}	
-	if(document.getElementById('txt_emal_proveedor').value=='' || !validarMail(document.getElementById('txt_emal_proveedor').value)){
+	if(document.getElementById('txt_emal_proveedor').value=='' || 
+                !validarMail(document.getElementById('txt_emal_proveedor').value)){
 		mostrarDiv('error_email');	
 		return false;
 	}	
         if (form.indexOf('EditarOrden') > -1) {
         id = form.substring(11, form.length);
-        document.getElementById('form_agregar_proveedor_ordendepago').action = '?mod=ordenesdepago&niv=1&task=EditarOrden&proveedor=true&id_element=' + id;
+        document.getElementById('form_agregar_proveedor_ordendepago').action = 
+                '?mod=ordenesdepago&niv=1&task=EditarOrden&proveedor=true&id_element=' + id;
     }
     else {
-        document.getElementById('form_agregar_proveedor_ordendepago').action = '?mod=ordenesdepago&niv=1&task=' + form + '&proveedor=true'
+        document.getElementById('form_agregar_proveedor_ordendepago').action = 
+                '?mod=ordenesdepago&niv=1&task=' + form + '&proveedor=true'
 
     }
     document.getElementById('form_agregar_proveedor_ordendepago').submit();
 }
 function validar_editar_proveedor(){
     
-        if(document.getElementById('txt_nit_proveedor_edit').value=='' ||!validarEntero(document.getElementById('txt_nit_proveedor_edit').value)||  document.getElementById('txt_nit_proveedor_edit').value.length>15){
+        if(document.getElementById('txt_nit_proveedor_edit').value=='' ||
+                !validarEntero(document.getElementById('txt_nit_proveedor_edit').value)||  
+                document.getElementById('txt_nit_proveedor_edit').value.length>15){
 		mostrarDiv('error_nit');	
 		return false;
 	}
@@ -117,7 +134,9 @@ function validar_editar_proveedor(){
 		mostrarDiv('error_nombre');	
 		return false;
 	}
-	if(document.getElementById('txt_telefono_proveedor_edit').value=='' || !validarEntero(document.getElementById('txt_telefono_proveedor_edit').value)|| (document.getElementById('txt_telefono_proveedor_edit').value.length < 6)){
+	if(document.getElementById('txt_telefono_proveedor_edit').value=='' || 
+                !validarEntero(document.getElementById('txt_telefono_proveedor_edit').value)|| 
+                (document.getElementById('txt_telefono_proveedor_edit').value.length < 7)){
 		mostrarDiv('error_telefono');	
 		return false;
 	}
@@ -144,11 +163,14 @@ function validar_editar_proveedor(){
         if(document.getElementById('txt_ApB_contac_proveedor_edit').value==''){
 		ocultarDiv('error_oculto');
 	}
-	if(document.getElementById('txt_tel_contac_proveedor_edit').value=='' || !validarEntero(document.getElementById('txt_tel_contac_proveedor_edit').value)|| (document.getElementById('txt_tel_contac_proveedor_edit').value.length < 6 )){
+	if(document.getElementById('txt_tel_contac_proveedor_edit').value=='' || 
+                !validarEntero(document.getElementById('txt_tel_contac_proveedor_edit').value)|| 
+                (document.getElementById('txt_tel_contac_proveedor_edit').value.length < 7 )){
 		mostrarDiv('error_telcontac');	
 		return false;
 	}	
-	if(document.getElementById('txt_emal_proveedor_edit').value=='' || !validarMail(document.getElementById('txt_emal_proveedor_edit').value)){
+	if(document.getElementById('txt_emal_proveedor_edit').value=='' || 
+                !validarMail(document.getElementById('txt_emal_proveedor_edit').value)){
 		mostrarDiv('error_email');	
 		return false;
 	}	

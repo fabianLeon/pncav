@@ -32,8 +32,8 @@ class CHtmlGraficas {
                 margin-top:120px;
                 position:relative;
                 padding:10px;
-                width:<?php echo $width ?>px;
-                min-height:<?php echo $height?>px;
+                width:800px;
+                min-height:800px;
                 border-radius:10px;
                 background-color:#D8D8D8;
                 box-shadow: 0 2px 5px #DF0101;
@@ -155,8 +155,27 @@ class CHtmlGraficas {
 
                 <?php
                 break;
+            case 'graficaInversion':
+                ?>
+
+                <div id="popup<?php echo $nombre ?>" style="display: none;">
+                    <div class="content-popup">
+                        <div class="close"><a href="#" id="close<?php echo $nombre ?>"  ><img src="templates/img/close.png"/></a></div>
+                        <table>
+                            <tr>
+                            <img src="soportes/financiero/Graficas/GraficaInversiones.png">
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="popup-<?php echo $nombre ?>"></div>
+
+
+                <?php
+                break;
 
             default:
+      
                 break;
         }
         ?>

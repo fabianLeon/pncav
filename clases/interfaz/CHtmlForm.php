@@ -1,10 +1,10 @@
 <?php
 /**
- * 
+ * Gestion Interventoria - Fenix
  *
  * <ul>
  * <li> Redcom Ltda <www.redcom.com.co></li>
- * <li> Proyecto PNCAV</li>
+ * <li> Proyecto RUNT</li>
  * </ul>
  */
 
@@ -20,7 +20,7 @@
  * @subpackage interfaz
  * @author Redcom Ltda
  * @version 2013.01.00
- * @copyright SERTIC - MINTICS
+ * @copyright Ministerio de Transporte
  */
 class CHtmlForm {
 
@@ -228,10 +228,10 @@ class CHtmlForm {
             'campos' => $campos, 'maxlength' => $maxlength,
             'class' => $class);
     }
-
-    function addBotonFormulario($type, $id, $name, $class, $events, $value) {
-        $this->elementos[count($this->elementos)] = array('type' => $type, 'id' => $id, 'name' => $name,
-            'class' => $class, 'events' => $events, 'value' => $value);
+    
+    function addBotonFormulario($type,$id,$name,$class,$events,$value){
+        $this->elementos[count($this->elementos)]=array('type'=>$type,'id'=>$id,'name'=>$name,
+            'class'=>$class,'events'=>$events,'value'=>$value);
     }
 
     /**
@@ -259,257 +259,265 @@ class CHtmlForm {
                     <tr><td colspan="3" class="titleform"><?php echo $html->traducirTildes($this->title); ?></td></tr>
                 <?php } ?>
                 <?php $cont_e = 0; ?>
-                <?php if (isset($this->elementos)) foreach ($this->elementos as $e) { ?>
-                        <?php if ($e['type'] != 'hidden') { ?>
-                            <?php if ($this->spaces != 0) { ?>
-                                <tr><td colspan="3">&nbsp;</td></tr>
-                            <?php } ?>
-                            <?php if ($e['type'] == 'title') { ?>
-                                <tr><td colspan="3" class="titleinform"><?php echo $html->traducirTildes($e['text']); ?></td></tr>
-                            <?php } else { ?>
-                                <tr>
-                                    <td width="20%" class="<?php echo $this->class_etiquetas; ?>" nowrap valign='top'>
-                                        <label id="label_<?php echo $cont_e; ?>">   
-                                            <?php echo $html->traducirTildes($this->etiquetas[$cont_e]); ?> 
-                                        </label>
-                                    </td>
-                                    <td width="40%">
-                                        <?php if ($e['type'] == 'grid') { ?>
-                                            <table border="0" cellspacing="1" cellpadding="0">
-                                                <tr>
-                                                    <td>&nbsp;</td>
-                                                    <?php foreach ($e['titulos_columnas'] as $t) { ?>
-                                                        <td><?php echo $t['nombre'] ?></td>
-                                                    <?php } ?>
-                                                </tr>
+                <?php if(isset($this->elementos))foreach ($this->elementos as $e) { ?>
+                    <?php if ($e['type'] != 'hidden') { ?>
+                        <?php if ($this->spaces != 0) { ?>
+                            <tr><td colspan="3">&nbsp;</td></tr>
+                        <?php } ?>
+                        <?php if ($e['type'] == 'title') { ?>
+                            <tr><td colspan="3" class="titleinform"><?php echo $html->traducirTildes($e['text']); ?></td></tr>
+                                <?php } else { ?>
+                            <tr>
+                                <td width="20%" class="<?php echo $this->class_etiquetas; ?>" nowrap valign='top'>
+                                <label id="label_<?php echo $cont_e;?>">   
+                                 <?php echo $html->traducirTildes($this->etiquetas[$cont_e]); ?> 
+                                </label>
+                                </td>
+                                <td width="40%">
+                    <?php if ($e['type'] == 'grid') { ?>
+                                        <table border="0" cellspacing="1" cellpadding="0">
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <?php foreach ($e['titulos_columnas'] as $t) { ?>
+                                                    <td><?php echo $t['nombre'] ?></td>
+                                            <?php } ?>
+                                            </tr>
                                                 <?php foreach ($e['titulos_filas'] as $f) { ?>
-                                                    <tr>
-                                                        <td><?php echo $f['nombre'] ?></td>
-                                                        <?php foreach ($e['titulos_columnas'] as $t) { ?>
-                                                            <td>
-                                                                <input type="text" 
-                                                                       id="txt_<?php echo $e['id'] . '_' . $t['id'] . "_" . $f['id']; ?>" 
-                                                                       name="txt_<?php echo $e['id'] . '_' . $t['id'] . "_" . $f['id']; ?>" 
-                                                                       size="5"
-                                                                       value="<?php echo $e['campos'][$e['id']][$t['id']][$f['id']] ?>" 
-                                                                       maxlength="5" 
-                                                                       class=" "
-                                                                       />
-                                                            </td>
-                                                        <?php } ?>
-                                                    </tr>
+                                                <tr>
+                                                    <td><?php echo $f['nombre'] ?></td>
+                            <?php foreach ($e['titulos_columnas'] as $t) { ?>
+                                                        <td>
+                                                            <input type="text" 
+                                                                   id="txt_<?php echo $e['id'] . '_' . $t['id'] . "_" . $f['id']; ?>" 
+                                                                   name="txt_<?php echo $e['id'] . '_' . $t['id'] . "_" . $f['id']; ?>" 
+                                                                   size="5"
+                                                                   value="<?php echo $e['campos'][$e['id']][$t['id']][$f['id']] ?>" 
+                                                                   maxlength="5" 
+                                                                   class=" "
+                                                                   />
+                                                        </td>
                                                 <?php } ?>
-                                            </table>
+                                                </tr>
                                         <?php } ?>
-                                        <?php if ($e['type'] == 'text' || $e['type'] == 'password') { ?>
-                                            <input type="<?php echo $e['type']; ?>" 
-                                                   id="<?php echo $e['id']; ?>" 
-                                                   name="<?php echo $e['name']; ?>" 
-                                                   size="<?php echo $e['size']; ?>"
-                                                   value="<?php echo $html->traducirTildes($e['value']); ?>" 
-                                                   maxlength="<?php echo $e['maxlength']; ?>" 
-                                                   class="<?php echo $e['class']; ?>"
-                                                   <?php echo $e['events']; ?> 
-                                                   />
-                                               <?php } ?>
-                                               <?php if ($e['type'] == 'division') { ?>
-                                                   <?php echo $e['texto']; ?> 
-                                               <?php } ?>
-                                               <?php if ($e['type'] == 'mapa') { ?>
-                                                   <?php echo "<div id='map' style='width: 500px; height: 300px'></div>"; ?> 
-                                               <?php } ?>
-                                               <?php if ($e['type'] == 'textarea') { ?>
-                                            <textarea id="<?php echo $e['id']; ?>" 
-                                                      name="<?php echo $e['name']; ?>" 
-                                                      cols="<?php echo $e['cols']; ?>" 
-                                                      rows="<?php echo $e['rows']; ?>" 
-                                                      class="<?php echo $e['class']; ?>"
-                                                      <?php echo $e['events']; ?> 
-                                                      ><?php echo $html->traducirTildes($e['value']); ?></textarea>
-                                                  <?php } ?>
-                                                  <?php if ($e['type'] == 'BotonFormulario') { ?>
-                                            <button id="<?php echo $e['id']; ?>" 
-                                                    name="<?php echo $e['name']; ?>" 
-                                                    class="<?php echo $e['class']; ?>"
-                                                    ><?php echo $html->traducirTildes($e['value']); ?></button>
-                                                <?php } ?>
-
-                                        <?php if ($e['type'] == 'file') { ?>
-                                            <input type="<?php echo $e['type']; ?>" 
-                                                   id="<?php echo $e['id']; ?>" 
-                                                   name="<?php echo $e['name']; ?>" 
-                                                   size="<?php echo $e['size']; ?>"
-                                                   class="<?php echo $e['class']; ?>"
-                                                   <?php echo $e['events']; ?> 
-                                                   />
-                                               <?php } ?>
-                                               <?php if ($e['type'] == 'date') { ?>
-                                            <input type="text>" 
-                                                   id="<?php echo $e['id']; ?>" 
-                                                   name="<?php echo $e['name']; ?>" 
-                                                   size="<?php echo $e['size']; ?>"
-                                                   value="<?php echo $html->traducirTildes($e['value']); ?>" 
-                                                   maxlength="<?php echo $e['maxlength']; ?>" 
-                                                   class="<?php echo $e['class']; ?>"
-                                                   <?php echo $e['events']; ?>
-                                                   readonly
-                                                   onclick="limpiar('<?php echo $e['id']; ?>')"
-                                                   />
-                                            <img src="templates/img/date.gif" 
-                                                 border="0" 
-                                                 width="20" 
-                                                 id="boton_<?php echo $e['id'] ?>"
-                                                 style="cursor: pointer;vertical-align:middle;" 
-                                                 title="Date selector"
-                                                 />
-                                            <script type="text/javascript">
-                                                Calendar.setup({
-                                                    inputField: "<?php echo $e['id']; ?>", // id of the input field
-                                                    ifFormat: "<?php echo $e['format']; ?>", // format of the input field
-                                                    showsTime: false, // will display a time selector
-                                                    button: "boton_<?php echo $e['id'] ?>", // trigger for the calendar (button ID)
-                                                    singleClick: true, // double-click mode
-                                                    step: 1                				// show all years in drop-down boxes 
-                                                });
-                                            </script>
+                                        </table>
+                    <?php } ?>
+                    <?php if ($e['type'] == 'text' || $e['type'] == 'password') { ?>
+                                        <input type="<?php echo $e['type']; ?>" 
+                                               id="<?php echo $e['id']; ?>" 
+                                               name="<?php echo $e['name']; ?>" 
+                                               size="<?php echo $e['size']; ?>"
+                                               value="<?php echo $html->traducirTildes($e['value']); ?>" 
+                                               maxlength="<?php echo $e['maxlength']; ?>" 
+                                               class="<?php echo $e['class']; ?>"
+                                               <?php echo $e['events']; ?> 
+                                               />
+                                           <?php } ?>
+                                           <?php if ($e['type'] == 'division') { ?>
+                                               <?php echo $e['texto']; ?> 
+                                           <?php } ?>
+                                           <?php if ($e['type'] == 'mapa') { ?>
+                                               <?php echo "<div id='map' style='width: 500px; height: 300px'></div>"; ?> 
+                    <?php } ?>
+                    <?php if ($e['type'] == 'textarea') { ?>
+                                        <textarea id="<?php echo $e['id']; ?>" 
+                                                  name="<?php echo $e['name']; ?>" 
+                                                  cols="<?php echo $e['cols']; ?>" 
+                                                  rows="<?php echo $e['rows']; ?>" 
+                                                  class="<?php echo $e['class']; ?>"
+                                                  <?php echo $e['events']; ?> 
+                                                  ><?php echo $html->traducirTildes($e['value']); ?></textarea>
+                    <?php } ?>
+                                 <?php if ($e['type'] == 'BotonFormulario' && $e['class']=='hidden') { ?>
+                                        <button id="<?php echo $e['id']; ?>" 
+                                                  name="<?php echo $e['name']; ?>" 
+                                                  class="<?php echo $e['class']; ?>"
+                                                  style="display: none;"
+                                               ><?php echo $html->traducirTildes($e['value']); ?></button>
+                    <?php } ?>
+                                        
+                    <?php if ($e['type'] == 'BotonFormulario' && $e['class']!='hidden') { ?>
+                                        <button id="<?php echo $e['id']; ?>" 
+                                                  name="<?php echo $e['name']; ?>" 
+                                                  class="<?php echo $e['class']; ?>"
+                                               ><?php echo $html->traducirTildes($e['value']); ?></button>
+                    <?php } ?>
+                                        
+                    <?php if ($e['type'] == 'file') { ?>
+                                        <input type="<?php echo $e['type']; ?>" 
+                                               id="<?php echo $e['id']; ?>" 
+                                               name="<?php echo $e['name']; ?>" 
+                                               size="<?php echo $e['size']; ?>"
+                                               class="<?php echo $e['class']; ?>"
+                                               <?php echo $e['events']; ?> 
+                                               />
+                    <?php } ?>
+                    <?php if ($e['type'] == 'date') { ?>
+                                        <input type="text>" 
+                                               id="<?php echo $e['id']; ?>" 
+                                               name="<?php echo $e['name']; ?>" 
+                                               size="<?php echo $e['size']; ?>"
+                                               value="<?php echo $html->traducirTildes($e['value']); ?>" 
+                                               maxlength="<?php echo $e['maxlength']; ?>" 
+                                               class="<?php echo $e['class']; ?>"
+                        <?php echo $e['events']; ?>
+                                               readonly
+                                               onclick="limpiar('<?php echo $e['id']; ?>')"
+                                               />
+                                        <img src="templates/img/date.gif" 
+                                             border="0" 
+                                             width="20" 
+                                             id="boton_<?php echo $e['id'] ?>"
+                                             style="cursor: pointer;vertical-align:middle;" 
+                                             title="Date selector"
+                                             />
+                                        <script type="text/javascript">
+                                            Calendar.setup({
+                                                inputField: "<?php echo $e['id']; ?>", // id of the input field
+                                                ifFormat: "<?php echo $e['format']; ?>", // format of the input field
+                                                showsTime: false, // will display a time selector
+                                                button: "boton_<?php echo $e['id'] ?>", // trigger for the calendar (button ID)
+                                                singleClick: true, // double-click mode
+                                                step: 1                				// show all years in drop-down boxes 
+                                            });
+                                        </script>
+                    <?php } ?>
+                    <?php if ($e['type'] == 'select') { ?>
+                                        <select id="<?php echo $e['id']; ?>" 
+                                                name="<?php echo $e['name']; ?>" 
+                                                class="<?php echo $e['class']; ?>"
+                                            <?php echo $e['events']; ?> 
+                                                >
+                                            <option value="-1"><?php echo $html->traducirTildes(SELECCIONE_UN . " " . $e['texto']); ?></option>
+                                            <?php foreach ($e['options'] as $s) { ?>
+                                                <option value="<?php echo $s['value']; ?>"
+                                                            <?php if ($e['value'] == $s['value']) echo "selected" ?>
+                                                        >
+                                                <?php echo $html->traducirTildes($s['texto']); ?>
+                                                </option>
                                         <?php } ?>
-                                        <?php if ($e['type'] == 'select') { ?>
-                                            <select id="<?php echo $e['id']; ?>" 
-                                                    name="<?php echo $e['name']; ?>" 
-                                                    class="<?php echo $e['class']; ?>"
-                                                    <?php echo $e['events']; ?> 
-                                                    >
-                                                <option value="-1"><?php echo $html->traducirTildes(SELECCIONE_UN . " " . $e['texto']); ?></option>
-                                                <?php foreach ($e['options'] as $s) { ?>
-                                                    <option value="<?php echo $s['value']; ?>"
-                                                    <?php if ($e['value'] == $s['value']) echo "selected" ?>
-                                                            >
-                                                                <?php echo $html->traducirTildes($s['texto']); ?>
-                                                    </option>
-                                                <?php } ?>
-                                            </select>
-                                        <?php } ?>
+                                        </select>
+                                    <?php } ?>
 
-                                        <?php if ($e['type'] == 'selectlink') { ?>
-                                            <select id="<?php echo $e['id']; ?>" 
-                                                    name="<?php echo $e['name']; ?>" 
-                                                    class="<?php echo $e['class']; ?>"
-                                                    <?php echo $e['events']; ?> 
-                                                    >
-                                                <option value="-1"><?php echo $html->traducirTildes(SELECCIONE_UN . " " . $e['texto']); ?></option>
-                                                <?php foreach ($e['options'] as $s) { ?>
-                                                    <option value="<?php echo $s['value']; ?>"
-                                                    <?php if ($e['value'] == $s['value']) echo "selected" ?>
-                                                            >
-                                                                <?php echo $html->traducirTildes($s['texto']); ?>
-                                                    </option>
+                    <?php if ($e['type'] == 'selectlink') { ?>
+                                        <select id="<?php echo $e['id']; ?>" 
+                                                name="<?php echo $e['name']; ?>" 
+                                                class="<?php echo $e['class']; ?>"
+                                            <?php echo $e['events']; ?> 
+                                                >
+                                            <option value="-1"><?php echo $html->traducirTildes(SELECCIONE_UN . " " . $e['texto']); ?></option>
+                                            <?php foreach ($e['options'] as $s) { ?>
+                                                <option value="<?php echo $s['value']; ?>"
+                                                            <?php if ($e['value'] == $s['value']) echo "selected" ?>
+                                                        >
+                                                <?php echo $html->traducirTildes($s['texto']); ?>
+                                                </option>
 
-                                                <?php } ?>
-                                            </select>
-                                            <?php if ($e['link'] != '') echo $e['link'] ?>
+                                            <?php } ?>
+                                        </select>
+                                         <?php if ($e['link'] != '') echo $e['link'] ?>
                                         <?php } ?>
                                         <?php if ($e['type'] == 'extendedCheckbox') { ?>
-                                            <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" class="optionbox">
-                                                <?php foreach ($e['subelements'] as $s) { ?>
-                                                    <tr>
-                                                        <td class="<?php echo $s['clase']; ?>">
-                                                            <input type="checkbox" 
-                                                                   id="<?php echo $e['id'] . "_" . $s['value']; ?>" 
-                                                                   name="<?php echo $e['name'] . "_" . $s['value']; ?>" 
-                                                                   value="<?php echo $s['value']; ?>" 
-                                                                   <?php echo $s['events']; ?>
-                                                                   <?php echo $s['checked']; ?>> <?php echo $html->traducirTildes($s['texto']); ?>
-                                                        </td>
-                                                        <td class="<?php echo $s['clase_dep']; ?>">
-                                                            <?php $cont_d = 0; ?>
-                                                            <?php foreach ($s['dependientes'] as $d) { ?>
-                                                                <input type="radio" 
-                                                                       id="radio_<?php echo $d['id']; ?>" 
-                                                                       name="radio_<?php echo $d['id']; ?>" 
-                                                                       value="<?php echo $cont_d; ?>" 
-                                                                       <?php echo $d['checked']; ?>> <?php echo $html->traducirTildes($d['texto']); ?>
-                                                                       <?php $cont_d++; ?>
-                                                                   <?php } ?>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
-                                            </table>
-                                        <?php } ?>
-                                        <?php if ($e['type'] == 'radioButton') { ?>
-                                            <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" class="optionbox">
-
-                                                <td class="<?php echo $e['clase_dep']; ?>">
-                                                    <?php $cont_d = 0; ?>
-                                                    <?php foreach ($e['dependientes'] as $d) { ?>
-                                                        <input type="radio" 
-                                                               id="radio_<?php echo $d['id']; ?>" 
-                                                               name="radio_<?php echo $d['id']; ?>" 
-                                                               value="<?php echo $cont_d; ?>" 
-                                                               <?php echo $d['checked']; ?>> <?php echo $html->traducirTildes($d['texto']); ?>
-                                                               <?php $cont_d++; ?>
-                                                           <?php } ?>
-                                                </td>
-                                            </table>
-                                        <?php } ?>									<?php if ($e['type'] == 'checkbox') { ?>
-                                            <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" class="optionbox">
-                                                <?php foreach ($e['subelements'] as $s) { ?>
-                                                    <tr>
-                                                        <td class="<?php echo $s['clase']; ?>">
-                                                            <input type="checkbox" 
-                                                                   id="<?php echo $e['id'] . "_" . $s['value']; ?>" 
-                                                                   name="<?php echo $e['name'] . "_" . $s['value']; ?>" 
-                                                                   value="<?php echo $s['value']; ?>" 
-                                                                   <?php echo $s['events']; ?>
-                                                                   <?php echo $s['checked']; ?>> <?php echo $html->traducirTildes($s['texto']); ?>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
-                                            </table>
-                                        <?php } ?>
-                                        <?php if ($e['type'] == 'checkboxandtext') { ?>
-                                            <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" class="optionbox">
+                                        <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" class="optionbox">
+                        <?php foreach ($e['subelements'] as $s) { ?>
                                                 <tr>
-                                                    <td>
+                                                    <td class="<?php echo $s['clase']; ?>">
                                                         <input type="checkbox" 
-                                                               id="chk_<?php echo $e['id']; ?>" 
-                                                               name="chk_<?php echo $e['name']; ?>" 
-                                                               value="<?php echo $e['value']; ?>" 
-                                                               <?php echo $e['events']; ?>
-                                                               <?php echo $e['checked']; ?>> <?php echo $html->traducirTildes($e['texto']); ?>
+                                                               id="<?php echo $e['id'] . "_" . $s['value']; ?>" 
+                                                               name="<?php echo $e['name'] . "_" . $s['value']; ?>" 
+                                                               value="<?php echo $s['value']; ?>" 
+                            <?php echo $s['events']; ?>
+                                                        <?php echo $s['checked']; ?>> <?php echo $html->traducirTildes($s['texto']); ?>
                                                     </td>
-                                                    <td>
-                                                        <input type="text" id="txt_<?php echo $e['id']; ?>" name="txt_<?php echo $e['name']; ?>" value="<?php echo $e['txt_value']; ?>">
-                                                        <input type="hidden" id="hdn_<?php echo $e['id']; ?>" name="hdn_<?php echo $e['name']; ?>" value="<?php echo $e['hdn_value']; ?>">
+                                                    <td class="<?php echo $s['clase_dep']; ?>">
+                            <?php $cont_d = 0; ?>
+                            <?php foreach ($s['dependientes'] as $d) { ?>
+                                                            <input type="radio" 
+                                                                   id="radio_<?php echo $d['id']; ?>" 
+                                                                   name="radio_<?php echo $d['id']; ?>" 
+                                                                   value="<?php echo $cont_d; ?>" 
+                                                                   <?php echo $d['checked']; ?>> <?php echo $html->traducirTildes($d['texto']); ?>
+                                <?php $cont_d++; ?>
+                                                <?php } ?>
                                                     </td>
                                                 </tr>
-                                            </table>
                                         <?php } ?>
-                                    </td>
-                                    <td width="40%">
-                                        <div id="<?php echo $this->errors[$cont_e]['id']; ?>" 
-                                             class="error" 
-                                             style="visibility:hidden; display:none;">
-                                                 <?php echo $html->traducirTildes($this->errors[$cont_e]['msg']) ?>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <?php $cont_e++; ?>
-                            <?php } ?>
+                                        </table>
+                    <?php } ?>
+                    <?php if ($e['type'] == 'radioButton') { ?>
+                                        <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" class="optionbox">
 
-                        <?php } else { ?>
-                            <input type="<?php echo $e['type']; ?>" 
-                                   id="<?php echo $e['id']; ?>" 
-                                   name="<?php echo $e['name']; ?>" 
-                                   value="<?php echo $e['value']; ?>" 
-                                   <?php echo $e['events']; ?> 
-                                   />
-                               <?php } ?>
+                                            <td class="<?php echo $e['clase_dep']; ?>">
+                        <?php $cont_d = 0; ?>
+                        <?php foreach ($e['dependientes'] as $d) { ?>
+                                                    <input type="radio" 
+                                                           id="radio_<?php echo $d['id']; ?>" 
+                                                           name="radio_<?php echo $d['id']; ?>" 
+                                                           value="<?php echo $cont_d; ?>" 
+                                                           <?php echo $d['checked']; ?>> <?php echo $html->traducirTildes($d['texto']); ?>
+                            <?php $cont_d++; ?>
+                                        <?php } ?>
+                                            </td>
+                                        </table>
+                                        <?php } ?>									<?php if ($e['type'] == 'checkbox') { ?>
+                                        <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" class="optionbox">
+                        <?php foreach ($e['subelements'] as $s) { ?>
+                                                <tr>
+                                                    <td class="<?php echo $s['clase']; ?>">
+                                                        <input type="checkbox" 
+                                                               id="<?php echo $e['id'] . "_" . $s['value']; ?>" 
+                                                               name="<?php echo $e['name'] . "_" . $s['value']; ?>" 
+                                                               value="<?php echo $s['value']; ?>" 
+                            <?php echo $s['events']; ?>
+                                                <?php echo $s['checked']; ?>> <?php echo $html->traducirTildes($s['texto']); ?>
+                                                    </td>
+                                                </tr>
+                                        <?php } ?>
+                                        </table>
+                    <?php } ?>
+                    <?php if ($e['type'] == 'checkboxandtext') { ?>
+                                        <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" class="optionbox">
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" 
+                                                           id="chk_<?php echo $e['id']; ?>" 
+                                                           name="chk_<?php echo $e['name']; ?>" 
+                                                           value="<?php echo $e['value']; ?>" 
+                        <?php echo $e['events']; ?>
+                        <?php echo $e['checked']; ?>> <?php echo $html->traducirTildes($e['texto']); ?>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="txt_<?php echo $e['id']; ?>" name="txt_<?php echo $e['name']; ?>" value="<?php echo $e['txt_value']; ?>">
+                                                    <input type="hidden" id="hdn_<?php echo $e['id']; ?>" name="hdn_<?php echo $e['name']; ?>" value="<?php echo $e['hdn_value']; ?>">
+                                                </td>
+                                            </tr>
+                                        </table>
+                    <?php } ?>
+                                </td>
+                                <td width="40%">
+                                    <div id="<?php echo $this->errors[$cont_e]['id']; ?>" 
+                                         class="error" 
+                                         style="visibility:hidden; display:none;">
+                    <?php echo $html->traducirTildes($this->errors[$cont_e]['msg']) ?>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php $cont_e++; ?>
+                        <?php } ?>
+
+            <?php } else { ?>
+                        <input type="<?php echo $e['type']; ?>" 
+                               id="<?php echo $e['id']; ?>" 
+                               name="<?php echo $e['name']; ?>" 
+                               value="<?php echo $e['value']; ?>" 
+                               <?php echo $e['events']; ?> 
+                               />
                            <?php } ?>
-                       <?php if (isset($this->botones)) { ?>
+        <?php } ?>
+                        <?php if (isset($this->botones)) { ?>
                     <tr>
                         <td colspan="3" class="td_right">
-                            <?php foreach ($this->botones as $b) { ?>
-                                <?php if ($b['type'] == 'button' || $b['type'] == 'submit' || $b['type'] == 'reset') { ?>
+            <?php foreach ($this->botones as $b) { ?>
+                <?php if ($b['type'] == 'button' || $b['type'] == 'submit' || $b['type'] == 'reset') { ?>
                                     <input type="<?php echo $b['type']; ?>" 
                                            id="<?php echo $b['id']; ?>" 
                                            name="<?php echo $b['name']; ?>" 
@@ -517,20 +525,20 @@ class CHtmlForm {
                                            class="<?php echo $b['class']; ?>"
                                            <?php echo $b['events']; ?> 
                                            />
-                                       <?php } ?>
-                                   <?php } ?>
-                                   <?php if ($this->options['autoClean']) { ?>
-                                <input type="button" 
-                                       id="clear_button" 
-                                       name="clear_button" 
-                                       value="<?php echo $html->traducirTildes(LIMPIAR_FORMULARIO); ?>" 
-                                       class="button"
-                                       onClick=limpiarFormulario('<?php echo $this->id ?>') 
-                                       />
-                                   <?php } ?>
+                <?php } ?>
+            <?php } ?>
+                                    <?php if($this->options['autoClean']){?>
+                            <input type="button" 
+                                   id="clear_button" 
+                                   name="clear_button" 
+                                   value="<?php echo $html->traducirTildes(LIMPIAR_FORMULARIO); ?>" 
+                                   class="button"
+                                   onClick=limpiarFormulario('<?php echo $this->id ?>') 
+                                   />
+                 <?php } ?>
                         </td>
                     </tr>
-                <?php } ?>
+        <?php } ?>
             </table>
         </form>
         <?php
@@ -597,52 +605,11 @@ class CHtmlForm {
                <?php echo $events; ?> 
                />
                <?php
-               }
+           }
 
-
-               //-----------------------------------------------------
-               function crearDateField($id, $size, $value, $format, $maxlength, $class, $events) {
-                  $html = new Chtml('');
-                  ?>
-        <input type="text" 
-               id="<?php echo $id; ?>" 
-               name="<?php echo $id; ?>" 
-               size="<?php echo $size; ?>"
-               value="<?php echo $html->traducirTildes($value); ?>" 
-               maxlength="<?php echo $maxlength; ?>" 
-               class="<?php echo $class; ?>"
-               <?php echo $events; ?> 
-               readonly
-               onclick="limpiar('<?php echo $id; ?>')"
-               />
-        <img src="templates/img/date.gif" 
-             border="0" 
-             width="20" 
-             id="boton_<?php echo $id ?>"
-             style="cursor: pointer;vertical-align:middle;" 
-             title="Date selector"
-             />
-        <script type="text/javascript">
-            Calendar.setup({
-                inputField: "<?php echo $id; ?>", // id of the input field
-                ifFormat: "<?php echo $format; ?>", // format of the input field
-                showsTime: false, // will display a time selector
-                button: "boton_<?php echo $id ?>", // trigger for the calendar (button ID)
-                singleClick: true, // double-click mode
-                step: 1                				// show all years in drop-down boxes 
-            });
-        </script>
-               <?php
-               }
-               
-        
-        
-        
-        //-------------------------------------------------
-
-        function crearBoton($tipo, $id, $valor, $events, $class = "button") {
-        $html = new Chtml('');
-        ?>
+           function crearBoton($tipo, $id, $valor, $events, $class = "button") {
+               $html = new Chtml('');
+               ?>
         <center>
             <input type="<?php echo $tipo; ?>" 
                    id="<?php echo $id; ?>" 
@@ -673,12 +640,12 @@ class CHtmlForm {
         <select id="<?php echo $id; ?>" 
                 name="<?php echo $name; ?>" 
                 class="<?php echo $class; ?>"
-        <?php echo $events; ?> 
+            <?php echo $events; ?> 
                 >
             <option value="-1"><?php echo $html->traducirTildes(SELECCIONE_UN . " " . $texto); ?></option>
                     <?php foreach ($options as $s) { ?>
                 <option value="<?php echo $s['value']; ?>"
-                            <?php if ($value == $s['value']) echo "selected" ?>>
+                <?php if ($value == $s['value']) echo "selected" ?>>
                 <?php echo $html->traducirTildes($s['texto']); ?>
                 </option>
         <?php } ?>

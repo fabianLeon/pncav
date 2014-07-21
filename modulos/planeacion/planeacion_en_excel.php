@@ -12,6 +12,7 @@ header("Content-Disposition: attachment; filename=Reporte_planeacion.xls");
 error_reporting(E_ALL - E_NOTICE - E_DEPRECATED - E_WARNING);
 
 require('../../clases/datos/CPlaneacionData.php');
+require_once '../../clases/aplicacion/CDataLog.php';
 require('../../clases/datos/CData.php');
 require('../../clases/interfaz/CHtml.php');
 // Incluimos el archivo de configuracion
@@ -28,7 +29,7 @@ $operador = OPERADOR_DEFECTO;
 
 
 //Variables
-//$codigo_eje = $_REQUEST['txt_codigo_eje'];
+$codigo_eje = $_REQUEST['txt_codigo_eje'];
 $region = $_REQUEST['txt_region'];
 $departamento = $_REQUEST['txt_departamento'];
 $municipio = $_REQUEST['txt_municipio'];
@@ -65,14 +66,13 @@ if (isset($fecha_fin) && $fecha_fin != '' && $fecha_fin != '0000-00-00') {
         }
     }
 }
-/*
 if (isset($codigo_eje) && $codigo_eje != "") {
     if ($criterio == "") {
         $criterio = " (p.pla_codigo_eje LIKE '%" . $codigo_eje . "%')";
     } else {
         $criterio .= " and (d.doc_descripcion LIKE '%" . $codigo_eje . "%')";
     }
-}*/
+}
 if (isset($region) && $region != -1 && $region != '') {
     if ($criterio == "") {
         $criterio = " d.der_id = " . $region;
@@ -109,12 +109,13 @@ $planeaciones = $planData->getPlaneacion($criterio, 'pla_id');
 
 echo "<table width='80%' border='1' align='center'>";
 //encabezado
-echo"<tr><th colspan = '8'><center></center></th></tr>";
-echo"<tr><th colspan = '8' bgcolor='#CCCCCC'><center>" . $html->traducirTildes(PLANEACION_REPORTE_EXCEL) . "</center></th></tr>";
+echo"<tr><th colspan = '9'><center></center></th></tr>";
+echo"<tr><th colspan = '9' bgcolor='#CCCCCC'><center>" . $html->traducirTildes(PLANEACION_REPORTE_EXCEL) . "</center></th></tr>";
 
 //titulos
 echo "<tr>";
-echo "<th>" . $html->traducirTildes(PLANEACION_DEPARTAMENTO) . "</th>
+echo "<th>" . $html->traducirTildes(PLANEACION_CODIGO_EJE) . "</th>
+	<th>" . $html->traducirTildes(PLANEACION_DEPARTAMENTO) . "</th>
 	<th>" . $html->traducirTildes(PLANEACION_MUNICIPIO) . "</th>
 	<th>" . $html->traducirTildes(PLANEACION_EJE) . "</th>
         <th>" . $html->traducirTildes(PLANEACION_NUMERO_ENCUESTAS) . "</th>
@@ -129,7 +130,8 @@ $cont = count($planeaciones);
 
 while ($contador < $cont) {
     echo "<tr>";
-    echo "<td>" . $planeaciones[$contador]['dep_nombre'] . "</td>		
+    echo "<td>" . $planeaciones[$contador]['codigo_eje'] . "</td>	
+        <td>" . $planeaciones[$contador]['dep_nombre'] . "</td>		
         <td>" . $planeaciones[$contador]['mun_nombre'] . "</td>
         <td>" . $planeaciones[$contador]['eje_nombre'] . "</td>
         <td>" . $planeaciones[$contador]['numero_encuestas'] . "</td>

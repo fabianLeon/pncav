@@ -8112,3 +8112,38 @@
 ', usu_id = '87', doc_fecha_respuesta = '0000-00-00', doc_codigo_ref = 'PNCAV-SRT-UTAR-0028-14', doc_fecha_respondido = '0000-00-00', doe_id = '1', ope_id  = '1' where doc_id = 161
 2014-07-18 23:12:32|damezquita|update documento_comunicado set doc_anexo = null  where doc_id = 161
 2014-07-18 23:12:32|damezquita|update documento_comunicado set doc_referencia_respondido = null  where doc_id = 161
+2014-07-21 20:22:10|admin|update usuario set usu_fecha_ultimo_ingreso = '2014-07-21' where usu_id = 1
+2014-07-21 20:22:35|admin|select * from documento_subtema where dot_id =  order by dos_nombre|You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by dos_nombre' at line 1
+2014-07-21 20:26:18|admin|select * from documento_subtema where dot_id =  order by dos_nombre|You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by dos_nombre' at line 1
+2014-07-21 20:26:26|admin|SELECT * FROM departamento where der_id =   order by  dep_nombre|You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by  dep_nombre' at line 1
+2014-07-21 20:26:26|admin|SELECT * FROM municipio where dep_id =   order by  mun_nombre|You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by  mun_nombre' at line 1
+2014-07-21 20:26:53|admin|SELECT * FROM departamento where der_id =   order by  dep_nombre|You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by  dep_nombre' at line 1
+2014-07-21 20:26:53|admin|SELECT * FROM municipio where dep_id =   order by  mun_nombre|You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by  mun_nombre' at line 1
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 1
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 3
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 5
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 7
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 9
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 11
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 12
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 13
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 15
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 17
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 19
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 21
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 23
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 24
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 25
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 27
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 29
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 31
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 33
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 35
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 36
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 37
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 39
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 41
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 43
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 45
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 47
+2014-07-21 20:26:53|admin|update planeacion set ees_id = 2 where  pla_id = 48

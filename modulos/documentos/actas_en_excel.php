@@ -28,6 +28,7 @@ error_reporting(E_ALL - E_NOTICE - E_DEPRECATED - E_WARNING);
 
 require('../../clases/datos/CDocumentoData.php');
 require('../../clases/datos/CActaData.php');
+require_once '../../clases/aplicacion/CDataLog.php';
 require('../../clases/datos/CData.php');
 require('../../clases/interfaz/CHtml.php');
 // Incluimos el archivo de configuracion

@@ -121,36 +121,6 @@ Class CData {
             return "false";
         }
     }
-	
-	/**
-     * almacena varios registros en la base datos de acuerdo a los parametros
-     *
-     * @param string $tabla tabla afectada
-     * @param string $campos campos afectados
-     * @param string $valores valores almacenados
-     */
-	function insertarRegistroVarios($tabla, $campos, $valores) {
-        $temp = split(",",$valores);
-        $valores = "";
-        foreach ($temp as $t){
-            if($t == "''"){
-                $valores .= 'null,';
-            }else{
-                $valores .= $t.",";
-            }
-        }
-        $valores = substr($valores, 0,  strlen($valores)-1);
-        $sql = "insert into `" . $tabla . "`(" . $campos . ")values" . $valores . "";
-        //echo $sql."<hr>";
-        $row = mysql_query($sql);
-        if ($row == 1) {
-            $this->log->writeLog($sql);
-            return "true";
-        } else {
-            $this->log->writeLog(mysql_error());
-            return "false";
-        }
-    }
 
     /**
      * borra registros de la base datos de acuerdo a los parametros

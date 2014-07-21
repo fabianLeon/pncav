@@ -90,6 +90,16 @@ class CHtmlVentanas {
         <?php
         switch ($nombre) {
             case 'actividad':
+                $db = new CData(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+                $db->conectar();
+                $docData = new COrdenesdepagoData($db);
+                $tiposActividades = $docData->ObtenerTiposActividades();
+                $opcionestipoactividades = null;
+                if (isset($tiposActividades)) {
+                    foreach ($tiposActividades as $t) {
+                        $opcionestipoactividades[count($opcionestipoactividades)] = array('value' => $t['idactividadestipo'], 'texto' => $t['nombreactividadestipo']);
+                    }
+                }
                 ?>
 
                 <div id="popup<?php echo $nombre ?>" style="display: none;">
@@ -110,12 +120,10 @@ class CHtmlVentanas {
 
                                                 >
                                             <option value="-1">Seleccione  Tipo de actividad</option>
-                                            <option value="1"
-                                                    >
-                                                Plan de Intengraci&oacute;n Suministros e Instalaciones (P.I.S.I.)                    </option>
-                                            <option value="2"
-                                                    >
-                                                Plan de Inversi&oacute;n del Anticipo (P.I.A.)                    </option>
+                                            <?php foreach ($opcionestipoactividades as $s) { ?>
+                                            <option value='<?php echo $s['value'] ?>'><?php echo $s['texto'] ?></option>
+                                            <?php }
+                                            ?>
                                         </select>
                                     </td>
                                     <td width="40%">
@@ -134,9 +142,9 @@ class CHtmlVentanas {
                                         <input type="text" 
                                                id="Descrip_actividad" 
                                                name="Descrip_actividad" 
-                                               size="30"
+                                               size="100"
                                                value="" 
-                                               maxlength="30" 
+                                               maxlength="100" 
                                                class=""
                                                onkeypress="ocultarDiv('error_descripcion');" 
                                                />
@@ -186,7 +194,7 @@ class CHtmlVentanas {
                                                name="clear_button" 
                                                value="Limpiar" 
                                                class="button"
-                                               onClick=limpiarFormulario('form_agregar_actividad_ordendepago') 
+                                               onClick=limpiarFormulario('form_agregar_actividad_ordendepago');
                                                />
                                     </td>
                                 </tr>
@@ -329,7 +337,7 @@ class CHtmlVentanas {
                 $db->conectar();
                 $basepaises = new CProveedorData($db);
                 $paises = $basepaises->ObtenerPaises();
-                $pais=$_REQUEST['sel_pais_proveedor'];
+              
                 
         $opcionespais = null;
         if (isset($paises)) {
@@ -338,7 +346,7 @@ class CHtmlVentanas {
             }
         }
 
-        $ciudades = $basepaises->ObtenerCiudades($pais);
+        $ciudades = $basepaises->ObtenerCiudadesFadein();
         $opcionesciudades = null;
         if (isset($ciudades)) {
             foreach ($ciudades as $t) {
@@ -477,7 +485,7 @@ class CHtmlVentanas {
                                         <select id="sel_ciudad_proveedor" 
                                                 name="sel_ciudad_proveedor" 
                                                 class=""
-                                                onChange=submit(); 
+                                               
                                                 >
                                             <option value="-1">Seleccione  Seleccione</option>
                                             <?php foreach ($opcionesciudades as $s) { ?> 
@@ -771,6 +779,7 @@ class CHtmlVentanas {
 
                     function saveProductos(idTable) {
                         isok = false;
+                        total = 0;
                         table = document.getElementById(idTable);
                         rows = table.rows.length - 1;
                         cells = document.getElementById(idTable).rows[0].cells.length - 1;
@@ -857,14 +866,19 @@ class CHtmlVentanas {
                                         break;
                                 }
                             }
+                            total+=value = parseFloat(document.getElementById((i + 1) + "" + 4).value)*parseFloat(document.getElementById((i + 1) + "" + 3).value);
                             producto = producto.substr(0, producto.length - 1);
                             productos += producto + ";";
                         }
-
+                        if(total>parseFloat(document.getElementById('txt_valor_total_orden').value)){
+                            window.alert("El valor total de los productos no debe superar el total de la orden de pago");
+                            return false;
+                        }
+                        document.getElementById('btnGuardar').disable=true;
                         productos = productos.substr(0, productos.length - 1);
-                        location.href = '?mod=ordenesdepago&niv=1&task=Agregarorden&productos=' + productos;
-
-
+                        document.getElementById('txt_productos').value=productos;
+                        document.getElementById('frm_agregar_orden').action = "?mod=ordenesdepago&niv=1&task=GuardarOrden";
+                        document.getElementById('frm_agregar_orden').submit();
                     }
 
 
@@ -874,7 +888,7 @@ class CHtmlVentanas {
                 </script>
 
 
-
+                
                 <div id="popup<?php echo $nombre ?>" style="display: none;">
                     <div class="content-popup">
                         <div class="close"><a href="#" id="close<?php echo $nombre ?>"  ><img src="templates/img/close.png"/></a></div>
@@ -882,6 +896,7 @@ class CHtmlVentanas {
                             <thead>
                                 <tr>
                                     <th class="titledatatable">Tipo</th>
+                                    
                                     <th class="titledatatable">Familia</th>
                                     <th class="titledatatable">Descripci&oacute;n</th>
                                     <th class="titledatatable">Cantidad</th>
@@ -914,6 +929,7 @@ class CHtmlVentanas {
                                 </tr>
                             </tbody>
                         </table>
+                        
                         <table>
                             <tr>
                                 <td>
@@ -923,7 +939,7 @@ class CHtmlVentanas {
                                     <button onclick="deleteRow('productos')"  class="button">Eliminar Fila</button>
                                 </td>
                                 <td>
-                                    <button onclick="saveProductos('productos')"  class="button">Guardar</button>
+                                    <button id='btnGuardar' onclick="saveProductos('productos')"  class="button">Guardar</button>
                                 </td>
                             </tr>
                         </table>
