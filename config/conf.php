@@ -25,21 +25,21 @@ define('LAYOUT_PATH', realpath('./templates/layouts/'));
 /**
 *host de la base de datos
 */
-define('DB_HOST','equipo04');
+define('DB_HOST','localhost');
 /**
 *usuario de la base de datos
 *@private
 */
-define('DB_USER','pncav');
+define('DB_USER','root');
 /**
 *password del usuario de la base de datos
 *@private
 */
-define('DB_PASSWORD','pnc4vpr0ducc10n');
+define('DB_PASSWORD','');
 /**
 *nombre de la base de datos
 */
-define('DB_NAME','pncav2');
+define('DB_NAME','pncav');
 /**
 *id operador por defecto
 */
@@ -47,7 +47,7 @@ define('OPERADOR_DEFECTO',1);
 /**
 *url del aplicativo
 */
-define('WEB_PATH','http://192.168.11.6:8082/pncav2');
+define('WEB_PATH','http://localhost/html/mintics');
 /**
 *direccion de correo
 */
