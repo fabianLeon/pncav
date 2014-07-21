@@ -39,7 +39,7 @@ define('DB_PASSWORD','');
 /**
 *nombre de la base de datos
 */
-define('DB_NAME','pncav');
+define('DB_NAME','pncav2');
 /**
 *id operador por defecto
 */
