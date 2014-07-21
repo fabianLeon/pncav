@@ -14,7 +14,6 @@
 class CPlaneacion {
 
     var $id = null;
-    //var $codigo_eje = null;
     var $region = null;
     var $departamento = null;
     var $municipio = null;
@@ -58,11 +57,6 @@ class CPlaneacion {
     public function getId() {
         return $this->id;
     }
-    /*
-    public function getCodigo_eje() {
-        return $this->codigo_eje;
-    }
-    */
     public function getMunicipio() {
         return $this->municipio;
     }
@@ -82,11 +76,6 @@ class CPlaneacion {
     public function setId($id) {
         $this->id = $id;
     }
-    /*
-    public function setCodigo_eje($codigo_eje) {
-        $this->codigo_eje = $codigo_eje;
-    }
-    */
     public function setMunicipio($municipio) {
         $this->municipio = $municipio;
     }
@@ -120,12 +109,11 @@ class CPlaneacion {
     }
 
     function savePlaneacion() {
-        $i = $this->dd->insertPlaneacion($this->municipio, $this->eje, $this->numero_encuestas, $this->fecha_inicio, $this->fecha_fin, $this->usuario);
-        $this->dd->getPlaneacionVerEjecucion('1',false);
         if($this->id==''){
-            $this->setId($this->dd->getUltimoIdPlaneacion());
-            //echo $this->dd->getUltimoIdPlaneacion().$this->id;
+            $this->setId($this->dd->getUltimoIdPlaneacion()+1);
         }
+        $i = $this->dd->insertPlaneacion($this->id,$this->municipio, $this->eje, $this->numero_encuestas, $this->fecha_inicio, $this->fecha_fin, $this->usuario);
+        $this->dd->getPlaneacionVerEjecucion('1',false);
         if ($i == "true") {
             $r = PLANEACION_AGREGADA;
         } else {
@@ -160,7 +148,6 @@ class CPlaneacion {
         $r = $this->dd->getPlaneacionById($this->id);
 
         if ($r != -1) {
-            //$this->codigo_eje = $r['pla_codigo_eje'];
             $this->region = $r['der_id'];
             $this->departamento = $r['dep_id'];
             $this->municipio = $r['mun_id'];
@@ -170,7 +157,6 @@ class CPlaneacion {
             $this->fecha_fin = $r['pla_fecha_fin'];
             $this->usuario = $r['usu_id'];
         } else {
-            //$this->codigo_eje = '';
             $this->region = '';
             $this->departamento = '';
             $this->municipio = '';
@@ -189,23 +175,23 @@ class CPlaneacion {
     function cargaMasiva($file_carga) {
 
         require_once './clases/Excel/reader.php';
-        // ExcelFile($filename, $encoding);
         $data = new Spreadsheet_Excel_Reader();
         // Set output Encoding.
         $data->setOutputEncoding('CP1251');
         $data->read($file_carga['tmp_name']);
         error_reporting(E_ALL ^ E_NOTICE);
+        $id_planeacion=$this->dd->getUltimoIdPlaneacion();
         for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) {
-            //$this->setCodigo_eje($data->sheets[0]['cells'][$i][1]);
+            $id_planeacion++;
+            $this->setId($id_planeacion);
             $this->setMunicipio(($data->sheets[0]['cells'][$i][1]));
             $this->setEje($this->dd->getEjeId($data->sheets[0]['cells'][$i][2]));
             $this->setNumero_encuestas($data->sheets[0]['cells'][$i][3]);
             $this->setFecha_inicio($this->obtenerFechaFormato($data->sheets[0]['cells'][$i][4]));
             $this->setFecha_fin($this->obtenerFechaFormato($data->sheets[0]['cells'][$i][5]));
             $this->setUsuario($this->dd->getUsuarioId($data->sheets[0]['cells'][$i][6]));
-            //echo $this->setFecha_inicio;
             $mens = $this->savePlaneacion();
-            $this->createEncuestasAndConsecutive($this->getNumero_encuestas(), $this->getId());
+            $this->createEncuestasAndConsecutive();
         }
         return $mens;
     }
@@ -225,13 +211,14 @@ class CPlaneacion {
 
     function createEncuestasAndConsecutive() {
         $valores=null;
+		$consecutivo= null;
         $consecutivo=  ($this->dd->ultimoConsecutivoEncuesta($this->getMunicipio()));
-        
-        $valores = $valores . "'" . ($consecutivo+1) . "','" . $this->id . "','2'),";// El dos es estado no ejecutado.
-        for ($i = 2; $i < $this->numero_encuestas; $i++) {
-            $valores = $valores . "('" . ($consecutivo+$i) . "','" . $this->id . "','2'),";
+		for ($i = 1; $i <= $this->getNumero_encuestas(); $i++) {
+            $valores = $valores . "('" . ($consecutivo+$i) . "','" . $this->id . "','2')";
+			if($i < $this->getNumero_encuestas()){
+				$valores = $valores.",";
+			}
         }
-        $valores = $valores . "('" . ($consecutivo+$this->numero_encuestas) . "','" . $this->id . "','2'";
         $this->dd->createEncuestas($valores);
     }
     

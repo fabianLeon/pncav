@@ -1,6 +1,6 @@
 <?php
     /* Libchart - PHP chart library
-     * Copyright (C) 2005-2011 Jean-Marc Trï¿½meaux (jm.tremeaux at gmail.com)
+     * Copyright (C) 2005-2011 Jean-Marc Trémeaux (jm.tremeaux at gmail.com)
      * 
      * This program is free software: you can redistribute it and/or modify
      * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
      *
      * All area dimensions are known in advance , and the optional logo is drawn in absolute coordinates.
      *
-     * @author Jean-Marc Trï¿½meaux (jm.tremeaux at gmail.com)
+     * @author Jean-Marc Trémeaux (jm.tremeaux at gmail.com)
      * Created on 27 july 2007
      */
     class Plot {
@@ -145,7 +145,7 @@
          * @param integer width of the image
          * @param integer height of the image
          */
-        public function Plot($width, $height, $padd=0) {
+        public function Plot($width, $height) {
             $this->width = $width;
             $this->height = $height;
 
@@ -154,7 +154,7 @@
             
             // Default layout
             $this->outputArea = new Rectangle(0, 0, $width - 1, $height - 1);
-            $this->outerPadding = new Padding(5,5,5,(5*$padd));
+            $this->outerPadding = new Padding(5);
             $this->titleHeight = 26;
             $this->titlePadding = new Padding(5);
             $this->hasCaption = false;

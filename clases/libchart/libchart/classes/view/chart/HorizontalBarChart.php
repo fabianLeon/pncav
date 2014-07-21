@@ -1,6 +1,6 @@
 <?php
     /* Libchart - PHP chart library
-     * Copyright (C) 2005-2011 Jean-Marc Trï¿½meaux (jm.tremeaux at gmail.com)
+     * Copyright (C) 2005-2011 Jean-Marc Trémeaux (jm.tremeaux at gmail.com)
      * 
      * This program is free software: you can redistribute it and/or modify
      * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,8 @@
     /**
      * Horizontal bar chart
      *
-     * @author Jean-Marc Trï¿½meaux (jm.tremeaux at gmail.com)
+     * @author Jean-Marc Trémeaux (jm.tremeaux at gmail.com)
      */
-define('LINE_LIMIT',20);
     class HorizontalBarChart extends BarChart {
         /**
          * Ratio of empty space beside the bars.
@@ -35,17 +34,11 @@ define('LINE_LIMIT',20);
          * @param integer width of the image
          * @param integer height of the image
          */
-        public function HorizontalBarChart($width = 600, $height = 250, $padd = 0) {
-            if($padd > LINE_LIMIT){
-                $padd = LINE_LIMIT;
-            }
-            parent::BarChart($width, $height, $padd);
+        public function HorizontalBarChart($width = 600, $height = 250) {
+            parent::BarChart($width, $height);
+
             $this->emptyToFullRatio = 1 / 5;
             $this->plot->setGraphPadding(new Padding(5, 30, 30, 50));
-        }
-        
-        function ajustarLabel($label){
-            
         }
 
         /**
@@ -73,29 +66,15 @@ define('LINE_LIMIT',20);
             
             // Get the graph area
             $graphArea = $this->plot->getGraphArea();
-            $escala='';
-            if($stepValue>=1000){
-                $divisor=1000;
-                $escala='(Miles)';
-            }
-            if($stepValue>=1000000){
-                $divisor=1000000;
-                $escala='(Millones)';
-            }
-            if($stepValue>=1000000000){
-                $divisor=1000000000;
-                $escala='(Miles de millones)';
-            }
-            $valueText='';
+
             // Horizontal axis
             for ($value = $minValue; $value <= $maxValue; $value += $stepValue) {
                 $x = $graphArea->x1 + ($value - $minValue) * ($graphArea->x2 - $graphArea->x1) / ($this->axis->displayDelta);
 
                 imagerectangle($img, $x - 1, $graphArea->y2 + 2, $x, $graphArea->y2 + 3, $palette->axisColor[0]->getColor($img));
                 imagerectangle($img, $x - 1, $graphArea->y2, $x, $graphArea->y2 + 1, $palette->axisColor[1]->getColor($img));
-                $valueText = $value/$divisor;
-                if($value+$stepValue>$maxValue) $valueText=$valueText.'    '.$escala;
-                $text->printText($img, $x, $graphArea->y2 + 5, $this->plot->getTextColor(), $valueText, $text->fontCondensed, $text->HORIZONTAL_CENTER_ALIGN);
+
+                $text->printText($img, $x, $graphArea->y2 + 5, $this->plot->getTextColor(), $value, $text->fontCondensed, $text->HORIZONTAL_CENTER_ALIGN);
             }
 
             // Get first serie of a list
@@ -115,27 +94,14 @@ define('LINE_LIMIT',20);
                 if ($i < $pointCount) {
                     $point = current($pointList);
                     next($pointList);
-                        
+    
                     $label = $point->getX();
-                    $words=  explode(' ', $label);
-                    $lines=null;
-                    $phrase='';
-                    $cont=0;
-                    foreach($words as $word){
-                        $lines[$cont] = $lines[$cont].$word.' ';
-                        if(strlen($lines[$cont])>LINE_LIMIT){
-                            $cont++;
-                        }
-                    }
-                    foreach($lines as $line){
-                        $phrase = $phrase.$line."\n";
-                    }
-                    $text->printText($img, $graphArea->x1 - 5, $y - $rowHeight / 2, $this->plot->getTextColor(),
-                            $phrase, $text->fontCondensed, $text->HORIZONTAL_RIGHT_ALIGN | $text->VERTICAL_CENTER_ALIGN);
+
+                    $text->printText($img, $graphArea->x1 - 5, $y - $rowHeight / 2, $this->plot->getTextColor(), $label, $text->fontCondensed, $text->HORIZONTAL_RIGHT_ALIGN | $text->VERTICAL_CENTER_ALIGN);
                 }
             }
         }
-        
+
         /**
          * Print the bars.
          */
@@ -179,18 +145,9 @@ define('LINE_LIMIT',20);
 
                     $point = current($pointList);
                     next($pointList);
-                    
+
                     $value = $point->getY();
-                    if($stepValue>=1000){
-                        $divisor=1000;
-                    }
-                    if($stepValue>=1000000){
-                        $divisor=1000000;
-                    }
-                    if($stepValue>=1000000000){
-                        $divisor=1000000000;
-                    }
-                    $valueText = number_format($value/$divisor,2,',','.');
+                    
                     $xmax = $graphArea->x1 + ($value - $minValue) * ($graphArea->x2 - $graphArea->x1) / ($this->axis->displayDelta);
 
                     // Bar dimensions
@@ -210,7 +167,7 @@ define('LINE_LIMIT',20);
                         
                     // Draw caption text on bar
                     if ($this->config->getShowPointCaption()) {
-                        $text->printText($img, $xmax + 5, $y2 - $barWidth / 2, $this->plot->getTextColor(), $valueText, $text->fontCondensed, $text->VERTICAL_CENTER_ALIGN);
+                        $text->printText($img, $xmax + 5, $y2 - $barWidth / 2, $this->plot->getTextColor(), $value, $text->fontCondensed, $text->VERTICAL_CENTER_ALIGN);
                     }
                     
                     // Draw the horizontal bar

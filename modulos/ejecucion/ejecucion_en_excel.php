@@ -89,8 +89,8 @@ if ($criterio == "") {
 
 echo "<table width='80%' border='1' align='center'>";
 //encabezado
-echo"<tr><th colspan = '13'><center></center></th></tr>";
-echo"<tr><th colspan = '13' bgcolor='#CCCCCC'><center>" . $html->traducirTildes(EJECUCION_REPORTE_EXCEL) . "</center></th></tr>";
+echo"<tr><th colspan = '12'><center></center></th></tr>";
+echo"<tr><th colspan = '12' bgcolor='#CCCCCC'><center>" . $html->traducirTildes(EJECUCION_REPORTE_EXCEL) . "</center></th></tr>";
 
 //titulos
 echo "<tr>";

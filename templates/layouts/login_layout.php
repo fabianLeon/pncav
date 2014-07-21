@@ -4,7 +4,7 @@
 *
 *<ul>
 *<li> Redcom Ltda <www.redcom.com.co></li>
-*<li> Proyecto RUNT</li>
+*<li> Proyecto PNCAV</li>
 *</ul>
 */
 
@@ -15,7 +15,7 @@
 * @subpackage layouts
 * @author Redcom Ltda
 * @version 2013.01.00
-* @copyright Ministerio de Transporte
+* @copyright SERTIC - MINTICS
 */
 
 	//no permite el acceso directo

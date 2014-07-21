@@ -184,7 +184,7 @@ class CHtmlDataTable {
                 $columnas = 0;
                 foreach ($f as $c) {
                     if(in_array($columnas, $this->sumColumns)){
-                        $temp[$columnas] += $c;
+                        $temp[$columnas] += $this->dataRows[$filas][$columnas];
                     }
                     
                     $columnas++;
@@ -206,18 +206,16 @@ class CHtmlDataTable {
         if (isset($this->dataRows)) {
             $temp = null;
             for($i=0;$i<count($this->dataRows[0]);$i++){
-                $temp[$i]=null;
+                $temp[$i]=0;
             }
             $filas = 0;
             foreach ($this->dataRows as $f) {
                 $columnas = 0;
                 foreach ($f as $c) {
                     if(in_array($columnas, $this->sumColumns)){
-                        $temp[$columnas] += $c;
+                        $temp[$columnas] += $this->dataRows[$filas][$columnas];
                     }
-                    else{
-                        $temp[$columnas] = null;
-                    }
+                    
                     $columnas++;
                 }
                 $filas++;
@@ -225,16 +223,9 @@ class CHtmlDataTable {
         }
         $cont=0;
         for($i=0;$i<count($temp);$i++){
-            if(isset($this->labelSum[$i])){
-                if(isset($temp[$i])){
-                    $temp[$i]=$this->labelSum[$i].number_format(($this->versusSum[$cont]-$temp[$i]), 2, ',', '.');
-                    $cont++;
-                }else{
-                    $temp[$i]=$this->labelSum[$i];
-                    $cont++;
-                }
-            }else{
-                $temp[$i]=null;
+            if($temp[$i]!=0){
+                $temp[$i]=$this->labelSum[$cont].number_format(($this->versusSum[$cont]-$temp[$i]), 2, ',', '.');
+                $cont++;
             }
         }
         return $temp;
@@ -399,7 +390,7 @@ class CHtmlDataTable {
                             $sumas = $this->sumInfo();
                             if(isset($sumas)){
                             foreach ($sumas as $s){
-                                if(isset($s) && $s!='0'){
+                                if($s!='0'){
                                     echo "<td class='sumdatatable'>".$s."</td>";
                                 }else{
                                     echo "<td>&nbsp;</td>";

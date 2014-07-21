@@ -5,10 +5,6 @@
  */
 
 function validar_add_planeacion() {
-    /*if (document.getElementById('txt_codigo_eje').value == '') {
-        mostrarDiv('error_codigo_eje');
-        return false;
-    }*/
     if (document.getElementById('txt_region').value == '-1') {
         mostrarDiv('error_region');
         return false;
@@ -63,7 +59,6 @@ function exportar_plantilla_planeacion() {
 }
 
 function cancelar_busqueda_planeacion() {
-    //document.getElementById('txt_codigo_eje').value = '';
     document.getElementById('txt_region').value = '-1';
     document.getElementById('txt_departamento').value = '-1';
     document.getElementById('txt_municipio').value = '-1';
@@ -75,7 +70,6 @@ function cancelar_busqueda_planeacion() {
     document.getElementById('frm_list_planeacion').submit();
 }
 function cancelarAccion_planeacion(form) {
-    //document.getElementById('txt_codigo_eje').value = '';
     document.getElementById('txt_region').value = '-1';
     document.getElementById('txt_departamento').value = '-1';
     document.getElementById('txt_municipio').value = '-1';
@@ -92,10 +86,6 @@ function cancelarAccion_planeacion_carga(form) {
 
 }
 function validar_edit_planeacion() {
-    /*if (document.getElementById('txt_codigo_eje').value == '') {
-        mostrarDiv('error_codigo_eje');
-        return false;
-    }*/
     if (document.getElementById('txt_region').value == '-1') {
         mostrarDiv('error_region');
         return false;

@@ -25,22 +25,21 @@ define('LAYOUT_PATH', realpath('./templates/layouts/'));
 /**
 *host de la base de datos
 */
-define('DB_HOST','localhost');
+define('DB_HOST','equipo04');
 /**
 *usuario de la base de datos
 *@private
 */
-define('DB_USER','madeopen_mintics');
+define('DB_USER','pncav');
 /**
 *password del usuario de la base de datos
 *@private
 */
-define('DB_PASSWORD','pncav_mintics');
-//define('DB_PASSWORD','sisinforedcom');
+define('DB_PASSWORD','pnc4vpr0ducc10n');
 /**
 *nombre de la base de datos
 */
-define('DB_NAME','madeopen_mintics');
+define('DB_NAME','pncav2');
 /**
 *id operador por defecto
 */
@@ -48,7 +47,7 @@ define('OPERADOR_DEFECTO',1);
 /**
 *url del aplicativo
 */
-define('WEB_PATH','http://localhost/html/mintics');
+define('WEB_PATH','http://192.168.11.6:8082/pncav2');
 /**
 *direccion de correo
 */
@@ -58,8 +57,8 @@ define('MAIL_ADDRESS','apdaza@gmail.com');
 */
 define('VALIDAR_IP','no');
 /**
-*log de datos
-*/
+*carpeta de logs
+**/
 define('DATA_LOG_FILE','./logs/data.log');
 /**
 *carpeta del lenguaje
@@ -86,6 +85,4 @@ while($row = mysql_fetch_array($result)){
         else
             $conf[$row["opc_variable"]] = array('archivo' => $row["opc_url"], 'layout' => $ly , 'operador' => $row["ope_id"]);
 } 
-
-
 ?>

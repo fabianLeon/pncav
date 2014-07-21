@@ -140,9 +140,9 @@ class CCorrespondenciaData {
                     left join usuario u on d.usu_id = u.usu_id
                     left join documento_tipo dt on dt.dti_id = d.dti_id 
                     left join documento_tema dot on dot.dot_id = d.dot_id
-                where " . $criterio . " and d.doe_id <> 1 
+                where " . $criterio . "  
                 order by " . $orden;
-                  //echo("<br>sql:".$sql);
+                //echo("<br>sql:".$sql);
         
         $r = $this->db->ejecutarConsulta($sql);
         if ($r) {
@@ -206,6 +206,9 @@ class CCorrespondenciaData {
                 . "usu_id, doc_fecha_respuesta, doc_anexo, "
                 . "doc_codigo_ref, doc_fecha_respondido, doc_referencia_respondido,"
                 . "doe_id, ope_id ";
+//        if($fechaMaxRepuesta == "") $fechaMaxRepuesta = "0000-00-00";
+//        if($fechaRespuesta == "") $fechaRespuesta = "0000-00-00";
+//        if($fechaRadicado == "") $fechaRadicado = "0000-00-00";
         $valores = "'" . $tipo . "','" . $tema . "','" . $subtema . "','" 
                         . $autor . "','" . $destinatario . "','" . $fechaRadicado . "','" 
                         . $referencia . "','" . $descripcion . "','" . $documentoSoporte . "','" 
@@ -222,12 +225,12 @@ class CCorrespondenciaData {
                                 $responsableRespuesta, $fechaMaxRepuesta, $anexos,
                                 $referenciaRespuesta,$fechaRespuesta, $referenciaRespondido, 
                                 $estado, $operador, $tieneAnexo) {
-        if(isset($fechaMaxRepuesta) && $fechaMaxRepuesta=="0000-00-00"){
-            $responsableRespuesta="";
-        }
-        if($responsableRespuesta==""){
-            $fechaMaxRepuesta="0000-00-00";
-        }
+//        if(isset($fechaMaxRepuesta) && $fechaMaxRepuesta=="0000-00-00"){
+//            //$responsableRespuesta="";
+//        }
+//        if($responsableRespuesta==""){
+//            $fechaMaxRepuesta="0000-00-00";
+//        }
         $tabla = "documento_comunicado";
 //        $campos = array("dti_id", "dot_id", " dos_id", 
 //                "doa_id_autor", "doa_id_dest", "doc_fecha_radicado", 
@@ -247,6 +250,9 @@ class CCorrespondenciaData {
                 "usu_id", "doc_fecha_respuesta", 
                 "doc_codigo_ref", "doc_fecha_respondido", 
                 "doe_id", "ope_id ");
+        if($fechaMaxRepuesta == "") $fechaMaxRepuesta = "0000-00-00";
+        if($fechaRespuesta == "") $fechaRespuesta = "0000-00-00";
+        if($fechaRadicado == "") $fechaRadicado = "0000-00-00";
         $valores = array("'" . $tipo . "'", "'" . $tema . "'", "'" . $subtema . "'", "'" 
                         . $autor . "'", "'" . $destinatario . "'", "'" . $fechaRadicado . "'", "'" 
                         . $descripcion . "'", "'" 

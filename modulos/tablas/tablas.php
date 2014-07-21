@@ -331,7 +331,7 @@ switch ($task) {
         $tabla = new CTabla($tablaData);
         $campos = $tablaData->getCampos($id_tabla);
         $criterio = $campos[0] . " = " . $id_delete;
-        //echo $criterio;
+        echo $criterio;
         $m = $tabla->deleteTabla($id_tabla, $criterio);
 
         echo $html->generaAviso($m, "?mod=" . $modulo . "&niv=" . $niv . "&task=list&sel_responsable=" . $responsable . "&sel_tema=" . $tema . "&sel_subtema=" . $subtema . "&sel_acta=" . $acta . "&sel_estado=" . $estado . '&operador=' . $operador);

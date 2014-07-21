@@ -280,7 +280,7 @@ Class CDocumento {
                     $dirOperador = $this->dd->getDirectorioOperador($this->operador);
 
                     $ruta = (RUTA_DOCUMENTOS . "/" . $dirOperador . $tipo . "/" . $tema . "/");
-
+                    
                     $carpetas = explode("/", substr($ruta, 0, strlen($ruta) - 1));
                     $cad = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['PHP_SELF'];
                     $ruta_destino = '';
@@ -300,10 +300,11 @@ Class CDocumento {
                     }
                     //$nombre_compuesto = $nombre_compuesto.".".$extension[$num];
                     unlink(strtolower($ruta) . $archivo_anterior);
-                    if (!move_uploaded_file($archivo['tmp_name'], strtolower($ruta) . $archivo['name'])) {
+                    //die($archivo['name']);
+                    if (!move_uploaded_file($archivo['tmp_name'], $ruta . $archivo['name'])) {
                         $r = ERROR_COPIAR_ARCHIVO;
                     } else {
-                        //$this->archivo = $nombre_compuesto;
+                        $this->archivo = $archivo['name'];
                         //$this->version = $version;
                         $i = $this->dd->updateDocumentoArchivo($this->id, $this->tipo, $this->tema, $this->subtema, $this->fecha, $this->descripcion, $this->version, $this->archivo, $this->estado);
                         if ($i == "true") {

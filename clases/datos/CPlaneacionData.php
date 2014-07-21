@@ -39,7 +39,6 @@ class CPlaneacionData {
         $regiones = null;
         $sql = "SELECT * FROM departamento where der_id = " . $criterio . "  order by " . $orden;
         $r = $this->db->ejecutarConsulta($sql);
-        //echo $sql;
         if ($r) {
             $cont = 0;
             while ($w = mysql_fetch_array($r)) {
@@ -55,7 +54,6 @@ class CPlaneacionData {
         $regiones = null;
         $sql = "SELECT * FROM municipio where dep_id = " . $criterio . "  order by " . $orden;
         $r = $this->db->ejecutarConsulta($sql);
-
         if ($r) {
             $cont = 0;
             while ($w = mysql_fetch_array($r)) {
@@ -85,7 +83,7 @@ class CPlaneacionData {
     function getPlaneacion($criterio, $orden) {
         $planeacion = null;
         $sql = "SELECT p.pla_id, der.der_nombre,d.dep_nombre,m.mun_nombre,e.eje_nombre, "
-                . "p.pla_numero_encuestas, t.ins_nombre, p.pla_fecha_inicio, p.pla_fecha_fin, u.usu_nombre "
+                . "p.pla_numero_encuestas, t.ins_nombre, p.pla_fecha_inicio, p.pla_fecha_fin, CONCAT( u.usu_nombre,'  ',u.usu_apellido)AS usu_nombre "
                 . "FROM planeacion p left join eje e on e.eje_id = p.eje_id "
                 . "left join municipio m on m.mun_id = p.mun_id "
                 . "left join departamento d on d.dep_id = m.dep_id "
@@ -93,9 +91,7 @@ class CPlaneacionData {
                 . "left join instrumento t on t.ins_id = e.ins_id "
                 . "left join usuario u on u.usu_id =p.usu_id where " . $criterio . " order by " . $orden;
 
-
         $r = $this->db->ejecutarConsulta($sql);
-        //echo $sql;
         if ($r) {
             $cont = 0;
             while ($w = mysql_fetch_array($r)) {
@@ -114,11 +110,13 @@ class CPlaneacionData {
         }
         return $planeacion;
     }
-
+    /*
+     * Obtiene la tabla para ser vista en ejecucions
+     */
     function getPlaneacionVerEjecucion($criterio, $excel) {
         $planeacion = null;
         $sql = "SELECT p.pla_id, der.der_nombre,d.dep_nombre,m.mun_nombre,e.eje_nombre, "
-                . "p.pla_numero_encuestas, t.ins_nombre, p.pla_fecha_inicio, p.pla_fecha_fin, u.usu_nombre, ees.ees_nombre "
+                . "p.pla_numero_encuestas, t.ins_nombre, p.pla_fecha_inicio, p.pla_fecha_fin, CONCAT( u.usu_nombre,'  ',u.usu_apellido)AS usu_nombre, ees.ees_nombre "
                 . "FROM planeacion p left join eje e on e.eje_id = p.eje_id "
                 . "left join municipio m on m.mun_id = p.mun_id "
                 . "left join departamento d on d.dep_id = m.dep_id "
@@ -126,10 +124,7 @@ class CPlaneacionData {
                 . "left join instrumento t on t.ins_id = e.ins_id "
                 . "left join encuesta_estado ees on  ees.ees_id = p.ees_id "
                 . "left join usuario u on u.usu_id = p.usu_id  where " . $criterio . " order by pla_id";
-        //echo $sql;
-
         $r = $this->db->ejecutarConsulta($sql);
-        //echo $sql;
         $estadoActualizado = null;
         $estado = null;
         if ($r) {
@@ -191,17 +186,32 @@ class CPlaneacionData {
 
     function dias_transcurridos_entre_fechas($fecha_i, $fecha_f) {
         $dias = (strtotime($fecha_f) - strtotime($fecha_i)) / 86400;
-        //$dias = abs($dias);
         $dias = floor($dias);
         return $dias;
     }
+    /*
+     * Obtiene el numero de ejes existenes
+     */
 
+    function getNumeroEjes() {
+        $sql = "select count(*) from eje " ;
+        $r = ($this->db->ejecutarConsulta($sql));
+        if ($r) {
+            $w = mysql_fetch_array($r);
+            return $w['count(*)'];
+        }
+    }
+    /*
+     * Obtiene el resumen de planeacion
+     */
     function getResumen($criterio) {
         $contadorEje = 1;
         $arreglo = null;
         $resumen = null;
         $total = null;
-        while ($contadorEje <= 5) {  // indica los 5 ejes existentes
+        $numeroEjes=null;
+        $numeroEjes=  $this->getNumeroEjes();
+        while ($contadorEje <= $numeroEjes) {  // indica los 5 ejes existentes
             $sql = "SELECT p.eje_id,e.eje_nombre, count(*), SUM(pla_numero_encuestas) FROM planeacion p 
                     inner join eje e on e.eje_id = p.eje_id 
                     left join municipio m on m.mun_id = p.mun_id 
@@ -226,11 +236,11 @@ class CPlaneacionData {
         return $resumen;
     }
 
-    function insertPlaneacion($municipio, $eje, $numero_encuestas, $fecha_inicio, $fecha_fin, $usuario) {
+    function insertPlaneacion($id, $municipio, $eje, $numero_encuestas, $fecha_inicio, $fecha_fin, $usuario) {
         $tabla = 'planeacion';
         $campos = 'pla_id,  mun_id,eje_id,pla_numero_encuestas, '
                 . 'pla_fecha_inicio,pla_fecha_fin, usu_id';
-        $valores = "'','" . $municipio . "','" . $eje . "','"
+        $valores = $id . ",'" . $municipio . "','" . $eje . "','"
                 . $numero_encuestas . "','" . $fecha_inicio . "','" . $fecha_fin . "','" . $usuario . "'";
         $r = $this->db->insertarRegistro($tabla, $campos, $valores);
         return $r;
@@ -260,7 +270,6 @@ class CPlaneacionData {
                 . "FROM planeacion p left join eje e on e.eje_id = p.eje_id "
                 . "left join municipio m on m.mun_id = p.mun_id "
                 . "left join departamento d on d.dep_id = m.dep_id where p.pla_id = " . $id;
-        //echo $sql;
         $r = $this->db->recuperarResultado($this->db->ejecutarConsulta($sql));
 
         if ($r)
@@ -269,38 +278,9 @@ class CPlaneacionData {
             return -1;
     }
 
-    /*
-      //Get codigos Eje Paral el modulo Ejecucion
-      function getCodigosEje() {
-      $codigos_eje = null;
-      $sql = "SELECT pla_id FROM planeacion ";
-      $r = $this->db->ejecutarConsulta($sql);
-      if ($r) {
-      $cont = 0;
-      while ($w = mysql_fetch_array($r)) {
-      $codigos_eje[$cont]['id'] = $w['pla_id'];
-      $codigos_eje[$cont]['nombre'] = $w['pla_codigo_eje'];
-      $cont++;
-      }
-      }
-      return $codigos_eje;
-      }
-      //Get codigos Eje Paral el modulo Ejecucion
-      function getCodigosEjeById($id) {
-      $codigos_eje = null;
-      $sql = "SELECT pla_id FROM planeacion where pla_id= " . $id;
-      $r = $this->db->ejecutarConsulta($sql);
-      if ($r) {
-      $w = mysql_fetch_array($r);
-      $codigos_eje['id'] = $w['pla_id'];
-      $codigos_eje['nombre'] = $w['pla_id'];
-      }
-      return $codigos_eje['nombre'];
-      } */
-
     function getUsuarios($orden) {
         $usuarios = null;
-        $sql = "SELECT  usu_id , usu_nombre from usuario order by " . $orden;
+        $sql = "SELECT  usu_id , CONCAT( usu_nombre,'  ',usu_apellido)AS usu_nombre from usuario order by " . $orden;
         $r = $this->db->ejecutarConsulta($sql);
         if ($r) {
             $cont = 0;
@@ -343,7 +323,7 @@ class CPlaneacionData {
     function createEncuestas($valores) {
         $tabla = 'encuesta';
         $campos = ' enc_consecutivo, pla_id, ees_id ';
-        $this->db->insertarRegistro($tabla, $campos, $valores);
+        $this->db->insertarRegistroVarios($tabla, $campos, $valores);
     }
 
     function deleteEncuestas($id) {
@@ -359,13 +339,13 @@ class CPlaneacionData {
 
     function ultimoConsecutivoEncuesta($id_municipio) {
         $sql = "SELECT  max(enc_consecutivo)as mayor from encuesta where enc_consecutivo LIKE '" . $id_municipio . "%'";
+        //echo $sql;
         $r = $this->db->ejecutarConsulta($sql);
-        if ($r==NULL) {
-            $w = mysql_fetch_array($r);
-            
-            return $w['mayor'];
-        } else {
+        $w = mysql_fetch_array($r);
+        if ($w['mayor']<=0) {
             return ($id_municipio * 1000);
+        } else {
+            return $w['mayor'];
         }
     }
 
@@ -376,7 +356,6 @@ class CPlaneacionData {
     function getUltimoIdPlaneacion() {
         $sql = "SELECT  MAX(pla_id) as mayor from planeacion";
         $r = $this->db->ejecutarConsulta($sql);
-        //echo $sql;
         if ($r) {
             $w = mysql_fetch_array($r);
             return $w['mayor'];

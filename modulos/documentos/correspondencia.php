@@ -950,7 +950,7 @@ switch ($task) {
 //        else 
 //            $documentoRespuesta = NULL;
         $estado = $_REQUEST['sel_estado_add'];
-
+        
         $doc_correspondencia = new CCorrespondencia($id, $corrData);
                 
         $doc_correspondencia->setTema($area);
@@ -975,7 +975,7 @@ switch ($task) {
         $doc_correspondencia->setOperador(OPERADOR_DEFECTO);
         $doc_correspondencia->setEstado($estado);
         
-        $m = $doc_correspondencia->saveEditCorrespondencia($documentoSoporte, $documentoAnexo, $documentoRespuesta);
+        $m = $doc_correspondencia->saveEditCorrespondencia($documentoSoporte, $documentoAnexo);
         echo $html->generaAviso($m, "?mod=" . $modulo . "&niv=1&task=list&sel_area=" . $area . "&txt_descripcion=" . $descripcion);
 
         break;

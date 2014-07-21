@@ -19,7 +19,6 @@ if (empty($task)) {
 switch ($task) {
 
     case 'pre-list':
-        //$codigo_eje = $_REQUEST['txt_codigo_eje'];
         $region = $_REQUEST['txt_region'];
         $departamento = $_REQUEST['txt_departamento'];
         $municipio = $_REQUEST['txt_municipio'];
@@ -29,14 +28,7 @@ switch ($task) {
         $criterio = $_REQUEST['txt_criterio'];
         //-------------------------------criterios---------------------------
         $criterio = "";
-        /*
-        if (isset($codigo_eje) && $codigo_eje != "") {
-            if ($criterio == "") {
-                $criterio = " (p.pla_codigo_eje LIKE '%" . $codigo_eje . "%')";
-            } else {
-                $criterio .= " and (p.pla_codigo_eje LIKE '%" . $codigo_eje . "%')";
-            }
-        }*/
+
         if (isset($region) && $region != -1 && $region != '') {
             if ($criterio == "") {
                 $criterio = " d.der_id = " . $region;
@@ -82,10 +74,7 @@ switch ($task) {
         $form->setId('frm_list_ejecucion');
         $form->setMethod('post');
         $form->setClassEtiquetas('td_label');
-        /*
-        $form->addEtiqueta(PLANEACION_CODIGO_EJE);
-        $form->addInputText('text', 'txt_codigo_eje', 'txt_codigo_eje', 20, 10, $codigo_eje, '', '');
-        */
+
         //Regiones
         $opciones = null;
         $form->addEtiqueta(PLANEACION_REGION);
@@ -142,7 +131,7 @@ switch ($task) {
         $form->addSelect('select', 'txt_eje', 'txt_eje', $opciones, PLANEACION_EJE, $eje, '', 'onChange=submit();');
 
         $form->addInputButton('button', 'btn_consultar', 'btn_consultar', BTN_ACEPTAR, 'button', 'onclick="consultar_ejecucion();"');
-        $form->addInputButton('button', 'btn_exportar', 'btn_exportar', PLANEACION_EXPORTAR, 'button', 'onclick="exportar_excel_ejecucion();"');
+        $form->addInputButton('button', 'btn_exportar', 'btn_exportar', BTN_EXPORTAR, 'button', 'onclick="exportar_excel_ejecucion();"');
 
 
         $form->addInputText('hidden', 'txt_criterio', 'txt_criterio', '5', '5', '', '', '');
@@ -193,9 +182,9 @@ switch ($task) {
         
         if (isset($pla_id) && $pla_id != "") {
             if ($criterio == "") {
-                $criterio = " (enc.pla_id LIKE '%" . $pla_id . "%')";
+                $criterio = " (enc.pla_id = " . $pla_id . ")";
             } else {
-                $criterio .= " and (enc.pla_id LIKE '%" . $pla_id . "%')";
+                $criterio .= " and (enc.pla_id = " . $pla_id . ")";
             }
         }
 
@@ -205,6 +194,7 @@ switch ($task) {
         $form->setClassEtiquetas('td_label');
         $form->setOptions('autoClean', false);
         $form->addInputButton('button', 'btn_consultar', 'btn_consultar', BTN_ATRAS, 'button', 'onclick="volver_pre_list();"');
+        $form->addInputButton('button', 'btn_consultar', 'btn_consultar', BTN_IMPORTAR, 'button', 'onclick="importar_excel_ejecucion(\'frm_list_ejecucion\',\''.$pla_id.'\');"');
         $form->writeForm();
 
         $ejecuciones_tb = $ejeData->getEEncuestas($criterio, false);
@@ -225,10 +215,6 @@ switch ($task) {
         $dt->addOtrosLink($otros);
         $otros = array('link' => "?mod=" . $modulo . "&niv=" . $niv . "&task=deleteEncuesta", 'img' => 'delete.png', 'alt' => ALT_AGREGAR_ENCUESTA);
         $dt->addOtrosLink($otros);
-        //$dt->setEditLink("?mod=" . $modulo . "&niv=" . $nivel . "&task=add");
-        //$dt->setDeleteLink("?mod=" . $modulo . "&niv=" . $nivel . "&task=delete");
-        //$dt->setDigitalizationLink("?mod=" . $modulo . "&niv=" . $nivel . "&task=edit");
-        //$dt->setAddLink("?mod=" . $modulo . "&niv=" . $nivel . "&task=add");
 
         $dt->setType(1);
         $pag_crit = "";
@@ -260,16 +246,6 @@ switch ($task) {
             $form->setId('frm_add_ejecucion');
             $form->setMethod('post');
             $form->setClassEtiquetas('td_label');
-            /*
-              //Consecutivo Encuesta
-              $form->addEtiqueta(EJECUCION_CONSECUTIVO_ENCUESTA);
-              $form->addInputText('text', 'txt_consecutivo_encuesta', 'txt_consecutivo_encuesta', 20, 15, $consecutivo, '', 'onChange="ocultarDiv(\'error_consecutivo_encuesta\');"');
-              $form->addError('error_consecutivo_encuesta', ERROR_EJECUCION_CONSECUTIVO_ENCUESTA);
-
-              $form->addEtiqueta(PLANEACION_CODIGO_EJE);
-              $form->addInputText('text', 'txt_codigo_eje', 'txt_codigo_eje', 20, 15, $codigo_eje, '', 'onChange="ocultarDiv(\'error_codigo_eje\');"');
-              $form->addError('error_codigo_eje', ERROR_PLANEACION_CODIGO_EJE);
-             */
             //File
             $form->addEtiqueta(EJECUCION_DOCUMENTO_SOPORTE);
             $form->addInputFile('file', 'file_documento_soporte', 'file_documento_soporte', 25, 'file', 'onChange="ocultarDiv(\'error_documento_soporte\');"');
@@ -343,21 +319,6 @@ switch ($task) {
             }
             $form->addSelect('select', 'txt_usuario', 'txt_usuario', $opciones, PLANEACION_USUARIO, $usuario, '', 'onChange="ocultarDiv(\'error_usuario\');"');
             $form->addError('error_usuario', ERROR_PLANEACION_USUARIO);
-
-            /*
-              //Estado
-              $form->addEtiqueta(EJECUCION_ESTADO);
-              $opciones = null;
-              $resultado = $ejeData->getEncuestaEstados();
-              if (isset($resultado)) {
-              foreach ($resultado as $t) {
-              $opciones[count($opciones)] = array('value' => $t['id'], 'texto' => $t['nombre']);
-              }
-              }
-              $form->addSelect('select', 'txt_estado', 'txt_estado', $opciones, EJECUCION_ESTADO, $estado, '', 'onChange="ocultarDiv(\'error_estado\');"');
-              $form->addError('error_estado', ERROR_EJECUCION_ESTADO);
-             */
-
             //Botones Formulario
             $form->addInputButton('button', 'btn_add', 'btn_add', BTN_AGREGAR, 'button', 'onClick=validar_add_ejecucion(\'&id_element=' . $id_element . '\');');
             $form->addInputButton('button', 'btn_consultar', 'btn_consultar', BTN_CANCELAR, 'button', 'onclick="cancelarAccion_ejecucion(\'frm_add_ejecucion\',\'&id_element=' . $id_element . '\');"');
@@ -386,14 +347,11 @@ switch ($task) {
         $ri = $_REQUEST['txt_ri'];
         $mei = $_REQUEST['txt_mei'];
         $usuario = $_REQUEST['txt_usuario'];
-        //$estado = $_REQUEST['txt_estado'];
-        //$archivo_anterior = $_REQUEST['archivo_anterior'];
 
 
         $encuesta = new CEncuesta($id_element, $ejeData);
         $encuesta->loadEncuesta();
         $encuesta->setConsecutivo($cosecutivo);
-        //$encuesta->setDocumento_soporte($archivo);
         $encuesta->setFecha($fecha);
         $encuesta->setCc($cc);
         $encuesta->setMci($mci);
@@ -402,7 +360,6 @@ switch ($task) {
         $encuesta->setRi($ri);
         $encuesta->setMei($mei);
         $encuesta->setUsuario($usuario);
-        //$encuesta->setEstado($estado);
 
         $m = $encuesta->saveEditEncuesta($archivo, '', $encuesta->getId());
 
@@ -416,9 +373,6 @@ switch ($task) {
 
         $encuesta = new CEncuesta($id_element, $ejeData);
         $encuesta->loadEncuesta();
-
-        //$consecutivo = $encuesta->getConsecutivo();
-        //$codigo_eje = $encuesta->getCodigo_eje();
         $archivo_anterior = $encuesta->getDocumento_soporte();
         $fecha = $encuesta->getFecha();
         $cc = $encuesta->getCc();
@@ -435,16 +389,7 @@ switch ($task) {
         $form->setId('frm_edit_ejecucion');
         $form->setMethod('post');
         $form->setClassEtiquetas('td_label');
-        /*
-          //Consecutivo Encuesta
-          $form->addEtiqueta(EJECUCION_CONSECUTIVO_ENCUESTA);
-          $form->addInputText('text', 'txt_consecutivo_encuesta', 'txt_consecutivo_encuesta', 20, 15, $consecutivo, '', 'onChange="ocultarDiv(\'error_consecutivo_encuesta\');"');
-          $form->addError('error_consecutivo_encuesta', ERROR_EJECUCION_CONSECUTIVO_ENCUESTA);
-
-          $form->addEtiqueta(PLANEACION_CODIGO_EJE);
-          $form->addInputText('text', 'txt_codigo_eje', 'txt_codigo_eje', 20, 15, $codigo_eje, '', 'onChange="ocultarDiv(\'error_codigo_eje\');"');
-          $form->addError('error_codigo_eje', ERROR_PLANEACION_CODIGO_EJE);
-         */
+        
         //File
         $form->addEtiqueta(EJECUCION_DOCUMENTO_SOPORTE);
         $form->addInputFile('file', 'file_documento_soporte', 'file_documento_soporte', 25, 'file', 'onChange="ocultarDiv(\'error_documento_soporte\');"');
@@ -518,19 +463,7 @@ switch ($task) {
         }
         $form->addSelect('select', 'txt_usuario', 'txt_usuario', $opciones, PLANEACION_USUARIO, $usuario, '', 'onChange="ocultarDiv(\'error_usuario\');"');
         $form->addError('error_usuario', ERROR_PLANEACION_USUARIO);
-        /*
-          //Estado
-          $form->addEtiqueta(EJECUCION_ESTADO);
-          $opciones = null;
-          $resultado = $ejeData->getEncuestaEstados();
-          if (isset($resultado)) {
-          foreach ($resultado as $t) {
-          $opciones[count($opciones)] = array('value' => $t['id'], 'texto' => $t['nombre']);
-          }
-          }
-          $form->addSelect('select', 'txt_estado', 'txt_estado', $opciones, EJECUCION_ESTADO, $estado, '', 'onChange="ocultarDiv(\'error_estado\');"');
-          $form->addError('error_estado', ERROR_EJECUCION_ESTADO);
-         */
+        
         $form->addInputText('hidden', 'archivo_anterior', 'archivo_anterior', '', '', $archivo_anterior, '', '');
         //Botones Formulario
         $form->addInputButton('button', 'btn_add', 'btn_add', BTN_ACEPTAR, 'button', 'onClick=validar_edit_ejecucion(\'&id_element=' . $id_element . '\');');
@@ -560,7 +493,6 @@ switch ($task) {
 
         $id_element = $_REQUEST['id_element'];
         $consecutivo = $_REQUEST['txt_consecutivo_encuesta'];
-        //$codigo_eje = $_REQUEST['txt_codigo_eje'];
         $archivo = $_FILES['file_documento_soporte'];
         $fecha = $_REQUEST['txt_fecha'];
         $cc = $_REQUEST['txt_cc'];
@@ -577,7 +509,6 @@ switch ($task) {
         $encuesta = new CEncuesta($id_element, $ejeData);
         $encuesta->loadEncuesta();
         $encuesta->setConsecutivo($cosecutivo);
-        //$encuesta->setCodigo_eje($codigo_eje);
         $encuesta->setDocumento_soporte($archivo);
         $encuesta->setFecha($fecha);
         $encuesta->setCc($cc);
@@ -726,7 +657,6 @@ switch ($task) {
                         }
                         //Saltos en cambio de respuesta
                         $saltos = $ejeData->arregloSaltarAPregunta($pb['id']);
-                        //echo $saltos;
                         $form->crearSelect($pb['id'], $pb['id'], '', 'onChange="saltar_pregunta_onChange(\'' . ($pb['id']) . '\',\'' . $saltos . '\',\'' . $pb['tipo'] . '\');"', '', $opciones_temp, $value[$pb['id']]);
 
                         $form->crearDivError('error_pregunta_' . $pb['id'], ERROR_EJECUCION_CC);
@@ -792,7 +722,6 @@ switch ($task) {
                         $form->crearTextField('text', $pb['id'], 40, ($value[$pb['id']]), 40, '', 'onChange="saltar_pregunta_onChange(\'' . ($pb['id']) . '\',\'' . $saltos . '\',\'' . $pb['tipo'] . '\');"');
                         $form->crearDivError('error_pregunta_' . $pb['id'], ERROR_EJECUCION_CC);
                         //Saltos por respuesta almacenada
-                        
                         if ($value[$pb['id']] != '') {
                             $respuestaTemp = '0';
                         }
@@ -813,8 +742,6 @@ switch ($task) {
                         $form->crearDivError('error_pregunta_' . $pb['id'], ERROR_EJECUCION_CC);
                         break;
                 }
-                //echo "</div>";
-                //echo $pb['id'];
                 $tabla->cerrarCelda();
                 $tabla->cerrarFila();
             }
@@ -880,7 +807,6 @@ switch ($task) {
 
                 switch ($pb['tipo']) {
                     case 3:
-                        //$contRespuestasMxM = $ejeData->getNumeroRespuestaMultipleById($pb['id']);
                         $contRespuestasMxM = $ejeData->getOpcionesPreguntas($pb['id']);
                         $temp = 0;
                         while ($temp < count($contRespuestasMxM)) {
@@ -949,7 +875,37 @@ switch ($task) {
         $mens = $ejecucion->deletEncuestaRespuestas();
         echo $html->generaAviso($mens, "?mod=" . $modulo . "&niv=" . $niv . "&task=list&id_element=" . $id_delete);
         break;
+    /*
+     * Carga Masiva
+     */
+    case 'carga':
+        $id_element=$_REQUEST['id_element'];
+        //Inicio Formulario
+        $form = new CHtmlForm();
+        $form->setTitle(PLANEACION);
+        $form->setId('frm_carga_ejecucion');
+        $form->setMethod('post');
+        $form->setClassEtiquetas('td_label');
 
+        $form->addEtiqueta(PLANEACION_CARGA);
+        $form->addInputFile('file', 'file_documento_carga', 'file_documento_carga', 25, 'file', 'onChange="ocultarDiv(\'error_documento_carga\');"');
+        $form->addError('error_documento_carga', ERROR_PLANEACION_DOCUMENTO_CARGA);
+
+        $form->addInputButton('button', 'btn_consultar', 'btn_consultar', BTN_ACEPTAR, 'button', 'onClick=validar_carga_ejecucion(\''.$id_element.'\');');
+        $form->addInputButton('button', 'btn_cancelar_carga', 'btn_cancelar_carga', BTN_CANCELAR, 'button', 'onClick=cancelarAccion_ejecucion(\'frm_carga_ejecucion\',\'&from=prelist&id_element='.$id_element.'\');');
+        $form->addInputButton('button', 'btn_plantilla', 'btn_plantilla', BTN_PLANTILLA, 'button', 'onClick=exportar_plantilla_ejecucion();');
+        $form->writeForm();
+
+        break;
+    case 'saveCarga':
+        $id_element=$_REQUEST['id_element'];
+        $file_carga = $_FILES['file_documento_carga'];
+        $ejecucion = new CEncuesta('', $ejeData);
+        $m = $ejecucion->cargaMasiva($file_carga);
+        echo $html->generaAviso($m, "?mod=ejecucion&niv=1&operador=1&task=list&from=prelist&id_element=".$id_element."");
+        break;
+    
+    
     /*
      * definida carga la página en construcción
      */
@@ -957,5 +913,6 @@ switch ($task) {
         include('templates/html/under.html');
 
         break;
+    
 }
 ?>

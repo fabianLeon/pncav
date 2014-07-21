@@ -59,9 +59,6 @@ Class CTabla {
         
         $tablas['cuentas_financiero']['id'] = 'cuentas_financiero';
         $tablas['cuentas_financiero']['nombre'] = 'Cuentas';
-        
-        $tablas['actividades_tipo']['id'] = 'actividades_tipo';
-        $tablas['actividades_tipo']['nombre'] = 'Plan de Actividades';
         asort($tablas);
         return $tablas;
     }
@@ -82,7 +79,6 @@ Class CTabla {
         $modos['monedas'] = 1;
         $modos['cuenta'] = 1;
         $modos['cuentas_financiero'] = 1;
-        $modos['actividades_tipo'] = 1;
         return $modos;
     }
 
@@ -124,7 +120,6 @@ Class CTabla {
         $titulos_campos['cft_id'] = CUENTA_TIPO;
         $titulos_campos['cft_nombre'] = CUENTA_TIPO;
 
-        $titulos_campos['Descripcion_Tipo'] = SELECCINE_ACTIVIDAD;
         return $titulos_campos;
     }
 

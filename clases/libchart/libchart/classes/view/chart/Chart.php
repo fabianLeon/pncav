@@ -1,6 +1,6 @@
 <?php
     /* Libchart - PHP chart library
-     * Copyright (C) 2005-2011 Jean-Marc Trï¿½meaux (jm.tremeaux at gmail.com)
+     * Copyright (C) 2005-2011 Jean-Marc Trémeaux (jm.tremeaux at gmail.com)
      * 
      * This program is free software: you can redistribute it and/or modify
      * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
     /**
      * Base chart class.
      *
-     * @author Jean-Marc Trï¿½meaux (jm.tremeaux at gmail.com)
+     * @author Jean-Marc Trémeaux (jm.tremeaux at gmail.com)
      */
     abstract class Chart {
         /**
@@ -51,12 +51,12 @@
          * @param integer width of the image
          * @param integer height of the image
          */
-        protected function Chart($width, $height,$padd=0) {
+        protected function Chart($width, $height) {
             // Initialize the configuration
             $this->config = new ChartConfig();
             
             // Creates the plot
-            $this->plot = new Plot($width, $height,$padd);
+            $this->plot = new Plot($width, $height);
             $this->plot->setTitle("Untitled chart");
             $this->plot->setLogoFileName(dirname(__FILE__) . "/../../../images/PoweredBy.png");
         }

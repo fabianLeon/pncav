@@ -90,7 +90,7 @@ class CHtmlDataTableAlignable extends CHtmlDataTable {
                             </td>
                             <?php $cont_titulos++; ?>
                         <?php } ?>
-                        <?php if (isset($this->addLink) || isset($this->editLink) || isset($this->seeLink) || isset($this->deleteLink) || isset($this->otrosLink)) { ?>
+                        <?php if (isset($this->addLink) || isset($this->editLink) || isset($this->deleteLink) || isset($this->otrosLink)) { ?>
                             <td class="titlecelldatatable"><?php echo $html->traducirTildes(OPCIONES); ?></td>
                         <?php } ?>
                     </tr>

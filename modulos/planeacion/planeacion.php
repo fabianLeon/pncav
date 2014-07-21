@@ -4,9 +4,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-//header('Content-type: application/vnd.ms-excel');
-//header("Content-Disposition: attachment; filename=Reporte_planeacion.xls");
-// Bloquear acceso por URL
 defined('_VALID_PRY') or die('Restricted access');
 
 $operador = OPERADOR_DEFECTO;
@@ -23,7 +20,6 @@ switch ($task) {
      */
     case 'list':
         //Variables
-        //$codigo_eje = $_REQUEST['txt_codigo_eje'];
         $region = $_REQUEST['txt_region'];
         $departamento = $_REQUEST['txt_departamento'];
         $municipio = $_REQUEST['txt_municipio'];
@@ -58,14 +54,7 @@ switch ($task) {
                     $criterio .= " and p.pla_fecha_fin = '" . $fecha_fin . "')";
                 }
             }
-        }/*
-        if (isset($codigo_eje) && $codigo_eje != "") {
-            if ($criterio == "") {
-                $criterio = " (p.pla_codigo_eje LIKE '%" . $codigo_eje . "%')";
-            } else {
-                $criterio .= " and (p.pla_codigo_eje LIKE '%" . $codigo_eje . "%')";
-            }
-        }*/
+        }
         if (isset($region) && $region != -1 && $region != '') {
             if ($criterio == "") {
                 $criterio = " d.der_id = " . $region;
@@ -104,10 +93,7 @@ switch ($task) {
         $form->setId('frm_list_planeacion');
         $form->setMethod('post');
         $form->setClassEtiquetas('td_label');
-        /*
-        $form->addEtiqueta(PLANEACION_CODIGO_EJE);
-        $form->addInputText('text', 'txt_codigo_eje', 'txt_codigo_eje', 20, 10, $codigo_eje, '', '');
-        */
+        
         //Regiones
         $opciones = null;
         $form->addEtiqueta(PLANEACION_REGION);
@@ -174,8 +160,7 @@ switch ($task) {
         $form->addInputButton('button', 'btn_consultar', 'btn_consultar', BTN_ACEPTAR, 'button', 'onClick=consultar_planeacion();');
         $form->addInputButton('button', 'btn_exportar', 'btn_exportar', PLANEACION_EXPORTAR, 'button', 'onClick=exportar_excel_planeacion();');
 
-        //$form->addInputText('hidden', 'txt_codigo_eje', 'txt_codigo_eje', '', '', $codigo_eje, '', '');
-        $form->addInputText('hidden', 'txt_criterio', 'txt_criterio', '5', '5', '', '', '');
+       $form->addInputText('hidden', 'txt_criterio', 'txt_criterio', '5', '5', '', '', '');
 
         $form->writeForm();
         //Carga filtro de planeaciones
@@ -216,7 +201,6 @@ switch ($task) {
 
     case'add':
         //Variables
-        //$codigo_eje = $_REQUEST['txt_codigo_eje'];
         $region = $_REQUEST['txt_region'];
         $departamento = $_REQUEST['txt_departamento'];
         $municipio = $_REQUEST['txt_municipio'];
@@ -232,11 +216,7 @@ switch ($task) {
         $form->setId('frm_add_planeacion');
         $form->setMethod('post');
         $form->setClassEtiquetas('td_label');
-        /*
-        $form->addEtiqueta(PLANEACION_CODIGO_EJE);
-        $form->addInputText('text', 'txt_codigo_eje', 'txt_codigo_eje', 20, 10, $codigo_eje, '', 'onChange="ocultarDiv(\'error_codigo_eje\');"');
-        $form->addError('error_codigo_eje', ERROR_PLANEACION_CODIGO_EJE);
-        */
+        
         //Regiones 
         $opciones = null;
         $form->addEtiqueta(PLANEACION_REGION);
@@ -321,7 +301,6 @@ switch ($task) {
      * SaveAdd Almacena la planeacion
      */
     case 'saveAdd':
-        //$codigo_eje = $_REQUEST['txt_codigo_eje'];
         $region = $_REQUEST['txt_region'];
         $departamento = $_REQUEST['txt_departamento'];
         $municipio = $_REQUEST['txt_municipio'];
@@ -332,8 +311,6 @@ switch ($task) {
         $usuario = $_REQUEST['txt_usuario'];
 
         $planeacion = new CPlaneacion('', $planData);
-
-        //$planeacion->setCodigo_eje($codigo_eje);
         $planeacion->setMunicipio($municipio);
         $planeacion->setEje($eje);
         $planeacion->setNumero_encuestas($numero_encuestas);
@@ -353,7 +330,6 @@ switch ($task) {
 
     case 'delete':
         $id_delete = $_REQUEST['id_element'];
-        //$codigo_eje = $_REQUEST['txt_codigo_eje'];
         $municipio = $_REQUEST['txt_municipio'];
         $eje = $_REQUEST['txt_eje'];
         $numero_encuestas = $_REQUEST['txt_numero_encuestas'];
@@ -374,7 +350,6 @@ switch ($task) {
 
     case 'confirmDelete':
         $id_delete = $_REQUEST['id_element'];
-        //$codigo_eje = $_REQUEST['txt_codigo_eje'];
 
         $planeacion = new CPlaneacion($id_delete, $planData);
         $planeacion->loadPlaneacion();
@@ -398,7 +373,6 @@ switch ($task) {
 
 
         //Variables
-        //$codigo_eje = $plan->getCodigo_eje();
         if (!isset($_REQUEST['txt_region']) || $_REQUEST['txt_region'] <= 0) {
             $region = $plan->getRegion();
         } else {
@@ -445,11 +419,6 @@ switch ($task) {
         $form->setId('frm_edit_planeacion');
         $form->setMethod('post');
         $form->setClassEtiquetas('td_label');
-        /*
-        $form->addEtiqueta(PLANEACION_CODIGO_EJE);
-        $form->addInputText('text', 'txt_codigo_eje', 'txt_codigo_eje', 20, 10, $codigo_eje, '', 'onChange="ocultarDiv(\'error_codigo_eje\');"');
-        $form->addError('error_codigo_eje', ERROR_PLANEACION_CODIGO_EJE);
-        */
         //Regiones
         $opciones = null;
         $form->addEtiqueta(PLANEACION_REGION);
@@ -534,8 +503,6 @@ switch ($task) {
      */
     case 'saveEdit':
         $id_edit = $_REQUEST['txt_id'];
-
-        //$codigo_eje = $_REQUEST['txt_codigo_eje'];
         $eje = $_REQUEST['txt_eje'];
         $municipio = $_REQUEST['txt_municipio'];
         $numero_encuestas = $_REQUEST['txt_numero_encuestas'];
@@ -544,8 +511,6 @@ switch ($task) {
         $usuario = $_REQUEST['txt_usuario'];
 
         $planeacion = new CPlaneacion($id_edit, $planData);
-
-        //$planeacion->setCodigo_eje($codigo_eje);
         $planeacion->setEje($eje);
         $planeacion->setMunicipio($municipio);
         $planeacion->setNumero_encuestas($numero_encuestas);

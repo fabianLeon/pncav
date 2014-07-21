@@ -435,6 +435,7 @@ class CCorrespondencia {
     //------------------------------------------------------------------------------
     function saveEditCorrespondencia($archivo1,$archivo2){
         $r = "";
+        
         if($this->dd->getCountByReferenciaEdit($this->id, $this->codigoReferencia)==0){
             $archivoAnexo=FALSE;
             $archivoRespuesta=FALSE;
@@ -512,7 +513,7 @@ class CCorrespondencia {
 
                         $control_carga = TRUE;
                         $nombre_compuesto1 = $nombre_compuesto.".".$extension1[$num1];
-
+                        
                         if(isset($archivo1)){
                             //if(isset($archivo1) && !move_uploaded_file($archivo1['tmp_name'], $ruta . CORRESPONDENCIA_SOPORTE."-".$nombre_compuesto1)){
                             if(isset($archivo1) && !move_uploaded_file($archivo1['tmp_name'], $ruta . $archivo1['name'])){
@@ -564,8 +565,9 @@ class CCorrespondencia {
                             }else{
                                 $this->documentoRespuesta = "";
                                 $this->fechaMaxRepuesta = "0000-00-00";
-                                $this->responsableRespuesta = "";
+                                //$this->responsableRespuesta = "";
                             }
+                            
                             $i = $this->dd->updateCorrespondencia($this->id,'1', $this->tema,
                                     $this->subtema, $this->autor, 
                                     $this->destinatario, $this->fechaRadicado, 

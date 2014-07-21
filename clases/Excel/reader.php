@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Gestion Interventoria - Fenix
+ * 
  *
  * <ul>
  * <li> Redcom Ltda <www.redcom.com.co></li>
- * <li> Proyecto RUNT</li>
+ * <li> Proyecto PNCAV</li>
  * </ul>
  */
 /**

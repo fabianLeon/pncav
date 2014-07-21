@@ -21,8 +21,6 @@ define('LONG_NUMERADOR',5);
 //-------------------------->PATH DESARROLLO
 define('RUTA_DOCUMENTOS','soportes');
 
-define('RUTA_DOCUMENTOS_DESEMBOLSO','soportes/financiero/desembolsos');
-
 //-------------------------->RUTAS FINANCIERO
 define('RUTA_FACTURAS',getcwd().'/soportes/financiero/facturas');
 

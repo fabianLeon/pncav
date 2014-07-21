@@ -25,7 +25,7 @@ define('CORRESPONDENCIA_AREA', 'Área');
 define('CORRESPONDENCIA_SUBTEMA', 'Subtema');
 define('CORRESPONDENCIA_DESTINATARIO', 'Destinatario');
 define('CORRESPONDECIA_CODIGO_REFERENCIA', 'Código referencia');
-define('CORRESPONDENCIA_RESPONSABLE_RESPUESTA', 'Responsable de Respuesta');
+define('CORRESPONDENCIA_RESPONSABLE_RESPUESTA', 'Responsable');
 define('CORRESPONDENCIA_DESCRIPCION', 'Descripción');
 define('CORRESPONDECIA_CONSECUTIVO', 'Consecutivo');
 define('CORRESPONDECIA_CONSECUTIVO_RESPUESTA', 'Consecutivo de respuesta');

@@ -229,69 +229,42 @@ function actualizarDestinatario(){
 }
 
 function verificarRespuesta(archivo){
-    //alert(archivo);
-//    var select_respuesta = document.getElementById('num_consecutivo_respuesta_add');
-//    for(i=0;i<select_respuesta.options.length;i++){
-//        if(select_respuesta.options[i].text==archivo){
-//            select_respuesta.selectedIndex = i;
-//        }
-//    }
-    if(document.getElementById('sel_responsable_add').value != -1 ||
-       document.getElementById('txt_fecha_respuesta_add').value != "" ||
+    if(document.getElementById('txt_fecha_respuesta_add').value != "" &&
        document.getElementById('txt_fecha_respuesta_add').value != "0000-00-00"){
+       //alert("si");
         document.getElementById('sel_seguimiento_add').selectedIndex = 1;
     }
     
 }
 
 function verificarRespuesta2(archivo){
-    //alert(archivo);
     var select_respuesta = document.getElementById('num_consecutivo_respuesta_add');
     for(i=0;i<select_respuesta.options.length;i++){
         if(select_respuesta.options[i].text==archivo){
             select_respuesta.selectedIndex = i;
         }
     }
-    
-    
 }
 
 function actualizaCampos(){
     if(document.getElementById('sel_anexo_add').value == '1'){
-        document.getElementById('label_10').style.display='';
+        document.getElementById('label_11').style.display='';
         document.getElementById('file_correspondencia_anexo_add').style.display='';
     }else{
-        document.getElementById('label_10').style.display='none';
+        document.getElementById('label_11').style.display='none';
         document.getElementById('file_correspondencia_anexo_add').style.display='none';
-        document.getElementById('sel_responsable_add').style.display='none';
     }
-    //sel_seguimiento_add
     if(document.getElementById('sel_seguimiento_add').value == '1'){
-        document.getElementById('label_12').style.display='';
-        document.getElementById('sel_responsable_add').style.display='';
         document.getElementById('label_13').style.display='';
         document.getElementById('txt_fecha_respuesta_add').style.display='';
         document.getElementById('boton_txt_fecha_respuesta_add').style.display='';
-        //document.getElementById('label_14').style.display='';
-        //document.getElementById('file_correspondencia_respuesta_add').style.display='';
-        //document.getElementById('label_15').style.display='';
-        //document.getElementById('num_consecutivo_respuesta_add').style.display='';
-//        if(document.getElementById('num_consecutivo_respuesta_add').value!=-1){
-//            select = document.getElementById('num_consecutivo_respuesta_add');
-//            var str = select.options[select.selectedIndex].text;
-//            document.getElementById('file_correspondencia_respuesta_add').value = str;
-//            var ini = str.indexOf("-")+1;
-//            var fin = str.indexOf(".");
-//            document.getElementById('consecutivo_correspondencia_respuesta_add').value = str.substring(ini,fin);
-//        }else{
-//            document.getElementById('file_correspondencia_respuesta_add').value = "";
-//            document.getElementById('consecutivo_correspondencia_respuesta_add').value = "";
-//        }
+        
         if(validarFechaVencida(document.getElementById('txt_fecha_respuesta_add').value)){
             if(document.getElementById('txt_tiene_documento_respuesta').value != ""){
                 document.getElementById('sel_estado_add').value = 2;
             }else{
-                if(document.getElementById('txt_requiere_documento_respuesta').value=='si')
+                if(document.getElementById('txt_requiere_documento_respuesta').value=='si' ||
+                        document.getElementById('sel_seguimiento_add').value == '1')
                     document.getElementById('sel_estado_add').value = 4; 
                 else
                     document.getElementById('sel_estado_add').value = 2;
@@ -300,22 +273,18 @@ function actualizaCampos(){
             if(document.getElementById('txt_tiene_documento_respuesta').value != ""){
                 document.getElementById('sel_estado_add').value = 2;
             }else{    
-                if(document.getElementById('txt_requiere_documento_respuesta').value=='si')
+                if(document.getElementById('txt_requiere_documento_respuesta').value=='si' ||
+                     document.getElementById('sel_seguimiento_add').value == '1')
                     document.getElementById('sel_estado_add').value = 3;
                 else
                     document.getElementById('sel_estado_add').value = 2;
             }
         }
     }else{
-        document.getElementById('label_12').style.display='none';
-        document.getElementById('sel_responsable_add').style.display='none';
         document.getElementById('label_13').style.display='none';
         document.getElementById('txt_fecha_respuesta_add').style.display='none';
         document.getElementById('boton_txt_fecha_respuesta_add').style.display='none';
-        //document.getElementById('label_14').style.display='none';
-        //document.getElementById('file_correspondencia_respuesta_add').style.display='none';
-        //document.getElementById('label_15').style.display='none';
-        //document.getElementById('num_consecutivo_respuesta_add').style.display='none';//num_consecutivo_respuesta_add
+        
         document.getElementById('sel_estado_add').value = 1;
         
     }

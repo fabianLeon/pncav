@@ -51,5 +51,7 @@ define('ERROR_EJECUCION_RI', '**Seleccione una respuesta');
 define('ERROR_EJECUCION_MEI', '**Digite una motivo');
 define('ERROR_EJECUCION_ESTADO', '**Seleccione un estado');
 define('ALT_AGREGAR_ENCUESTA', 'Agregar Encuesta');
-define('ERORR_EJECUCION_ENCUESTA_AGREGADA', 'Encuesta agregada anteriormente, si desea modificar algun dato utilice la opcioón editar');
+define('ERORR_EJECUCION_ENCUESTA_AGREGADA', 'Encuesta agregada anteriormente, si desea modificar algun dato utilice la opción editar');
+define('BTN_IMPORTAR', 'Importar');
+define('BTN_EXPORTAR', 'Exportar');
 ?>

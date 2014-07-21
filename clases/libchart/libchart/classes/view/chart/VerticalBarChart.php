@@ -110,19 +110,7 @@
             
             // Get the graph area
             $graphArea = $this->plot->getGraphArea();
-            $escala='';
-            if($stepValue>=1000){
-                $divisor=1000;
-                $escala='(miles)';
-            }
-            if($stepValue>=1000000){
-                $divisor=1000000;
-                $escala='(millones)';
-            }
-            if($stepValue>=1000000000){
-                $divisor=1000000000;
-                $escala='(miles de millones)';
-            }
+            
             // Vertical axis
             for ($value = $minValue; $value <= $maxValue; $value += $stepValue) {
                 $y = $graphArea->y2 - ($value - $minValue) * ($graphArea->y2 - $graphArea->y1) / ($this->axis->displayDelta);
@@ -134,13 +122,10 @@
                 }else{
                     $temp=$value;
                 }
-                if ($value + $stepValue > $maxValue) {
-                $temp = $temp . '    ' . $escala;
-                }
-                if (($this->percentSimbolCaption && $value < 100) || !$this->percentSimbolCaption) {
-                    $text->printText($img, $graphArea->x1 - 5, $y, $this->plot->getTextColor(), $temp, $text->fontCondensed, $text->HORIZONTAL_RIGHT_ALIGN | $text->VERTICAL_CENTER_ALIGN);
-                }
-        }
+                
+                if(($this->percentSimbolCaption&&$value<100)||!$this->percentSimbolCaption)
+                $text->printText($img, $graphArea->x1 - 5, $y, $this->plot->getTextColor(), $temp, $text->fontCondensed, $text->HORIZONTAL_RIGHT_ALIGN | $text->VERTICAL_CENTER_ALIGN);
+            }
 
             // Get first serie of a list
             $pointList = $this->getFirstSerieOfList();
@@ -260,7 +245,6 @@
                     if ($this->config->getShowPointCaption()) {
                         if($this->percentSimbolCaption){
                             $temp = $valueText.'%';
-                            if($valueText=='0,00')$temp='';
                         }else{
                             $temp=$valueText;
                         }

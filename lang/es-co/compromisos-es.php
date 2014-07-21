@@ -75,9 +75,10 @@
 	define('COMPROMISOS_PABIERTOS','% abiertos');
 	define('COMPROMISOS_PRESTO','% cerrados');
         define('COMPROMISOS_ALARMAS','Alarmas');
-        define('COMPROMISOS_ROJO','Rojo');
-        define('COMPROMISOS_AMARILLO','Amarillo');
-        define('COMPROMISOS_VERDE','Verde');
+        define('COMPROMISOS_ROJO','Sin respuesta');
+        define('COMPROMISOS_AMARILLO','Abierto');
+        define('COMPROMISOS_VERDE','Cerrado');
+		define('COMPROMISOS_PALABRAS','Descripción');
 	
 ?>
 

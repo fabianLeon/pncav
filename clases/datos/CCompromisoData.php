@@ -29,7 +29,7 @@ Class CCompromisoData{
 		$responsables = null;
 		$sql = "SELECT  u.* 
 		FROM  usuario u
-                WHERE  ". $criterio ."  order by ".$orden;
+                WHERE usu_id = 86 OR usu_id = 87 OR usu_id = 88 OR usu_id = 94 order by ".$orden;
 		//echo ("<br>getResponsablesCompromisos:".$sql);
 		$r = $this->db->ejecutarConsulta($sql);
 		if($r){
@@ -175,7 +175,7 @@ Class CCompromisoData{
                                 $compromisos[$cont]['com_fecha_entrega'] = $w['com_fecha_entrega'];
 				$compromisos[$cont]['doa_nombre'] = $responsable;
 				$compromisos[$cont]['com_actividad'] = $w['com_actividad'];
-				$compromisos[$cont]['doc_referencia'] = 'Acta No. '."<a href='././soportes/".$dirOperador.$w['dti_nombre']."/".$w['dot_nombre']."/".$w['doc_archivo']."' target='_blank'>{$w['doc_version']}</a>";;
+				$compromisos[$cont]['doc_referencia'] = "<a href='././soportes/".$dirOperador.$w['dti_nombre']."/".$w['dot_nombre']."/".$w['doc_archivo']."' target='_blank'>{$w['doc_archivo']}</a>";;
 				$compromisos[$cont]['com_fecha_limite'] = $w['com_fecha_limite'];
 				$compromisos[$cont]['ces_nombre'] = $w['ces_nombre'];
                                 $compromisos[$cont]['ces_id'] = $w['ces_id'];
