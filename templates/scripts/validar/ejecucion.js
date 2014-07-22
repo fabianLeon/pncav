@@ -4,52 +4,53 @@
  * and open the template in the editor.
  */
 function validar_add_ejecucion(url) {
-    
+
     if (document.getElementById('file_documento_soporte').value == "") {
         mostrarDiv('error_documento_soporte');
         return false;
     }
-    if (document.getElementById('txt_fecha').value == '') {
-        mostrarDiv('error_fecha');
-        return false;
-    }
-    if (document.getElementById('txt_cc').value == '-1') {
-        mostrarDiv('error_cc');
-        return false;
-    }
-    if (document.getElementById('txt_cc').value == '2') {
-        if (document.getElementById('txt_mci').value == '') {
-            mostrarDiv('error_mci');
-            return false;
-        }
-    }else if (document.getElementById('txt_cc').value == '1') {
-        document.getElementById('txt_mci').value = '';
-    }
-    if (document.getElementById('txt_rf').value == '-1') {
-        mostrarDiv('error_rf');
-        return false;
-    }
-    if (document.getElementById('txt_vi').value == '-1') {
-        mostrarDiv('error_vi');
-        return false;
-    }
-    if (document.getElementById('txt_ri').value == '-1') {
-        mostrarDiv('error_ri');
-        return false;
-    }
-    if (document.getElementById('txt_ri').value == '2') {
-        if (document.getElementById('txt_mei').value == '') {
-            mostrarDiv('error_mei');
-            return false;
-        }
-    }
-    else if (document.getElementById('txt_ri').value == '1'){
-        document.getElementById('txt_mei').value = '';
-    }
-    if (document.getElementById('txt_usuario').value == '-1') {
-        mostrarDiv('error_usuario');
-        return false;
-    }
+    /*
+     if (document.getElementById('txt_fecha').value == '') {
+     mostrarDiv('error_fecha');
+     return false;
+     }
+     if (document.getElementById('txt_cc').value == '-1') {
+     mostrarDiv('error_cc');
+     return false;
+     }
+     if (document.getElementById('txt_cc').value == '2') {
+     if (document.getElementById('txt_mci').value == '') {
+     mostrarDiv('error_mci');
+     return false;
+     }
+     }else if (document.getElementById('txt_cc').value == '1') {
+     document.getElementById('txt_mci').value = '';
+     }
+     if (document.getElementById('txt_rf').value == '-1') {
+     mostrarDiv('error_rf');
+     return false;
+     }
+     if (document.getElementById('txt_vi').value == '-1') {
+     mostrarDiv('error_vi');
+     return false;
+     }
+     if (document.getElementById('txt_ri').value == '-1') {
+     mostrarDiv('error_ri');
+     return false;
+     }
+     if (document.getElementById('txt_ri').value == '2') {
+     if (document.getElementById('txt_mei').value == '') {
+     mostrarDiv('error_mei');
+     return false;
+     }
+     }
+     else if (document.getElementById('txt_ri').value == '1'){
+     document.getElementById('txt_mei').value = '';
+     }
+     if (document.getElementById('txt_usuario').value == '-1') {
+     mostrarDiv('error_usuario');
+     return false;
+     }*/
     document.getElementById('frm_add_ejecucion').action = '?mod=ejecucion&niv=1&task=saveAdd' + url;
     document.getElementById('frm_add_ejecucion').submit();
 }
@@ -82,7 +83,7 @@ function salto_pregunta(url) {
 }
 
 function validar_edit_ejecucion(url) {
-    
+
     if (document.getElementById('archivo_anterior').value === '') {
         if (document.getElementById('file_documento_soporte').value == "") {
             mostrarDiv('error_documento_soporte');
@@ -102,7 +103,7 @@ function validar_edit_ejecucion(url) {
             mostrarDiv('error_mci');
             return false;
         }
-    }else if (document.getElementById('txt_cc').value == '1') {
+    } else if (document.getElementById('txt_cc').value == '1') {
         document.getElementById('txt_mci').value = '';
     }
     if (document.getElementById('txt_rf').value == '-1') {
@@ -123,7 +124,7 @@ function validar_edit_ejecucion(url) {
             return false;
         }
     }
-    else if (document.getElementById('txt_ri').value == '1'){
+    else if (document.getElementById('txt_ri').value == '1') {
         document.getElementById('txt_mei').value = '';
     }
     if (document.getElementById('txt_usuario').value == '-1') {
@@ -142,7 +143,7 @@ function salto_automatico(url, form) {
     document.getElementById(form).submit();
 }
 //new model-----------------------------------------------------------------------------
-function cambiarVisibilidad() {
+function cambiarVisibilidad(url) {
     var inicio = parseInt(document.getElementById('hdd_inicio').value);
     var fin = parseInt(document.getElementById('hdd_fin').value);
     for (i = inicio; i <= fin; i++) {
@@ -150,22 +151,44 @@ function cambiarVisibilidad() {
         ocultarDiv(sec);
         //mostrarDiv(sec);
     }
-    mostrarDiv('sec_' + parseInt(document.getElementById('hdd_seccion').value));
+    var seccionActual = parseInt(document.getElementById('hdd_seccion').value);
+    mostrarDiv('sec_' + seccionActual);
+    validar_saltar_automatico(url);
     /*
-    //Numero P31 Individuo
-    if (fin < 13) {
-        ocultarDiv(120);
-        ocultarDiv('prg_' + 120);
-        ocultarDiv('res_' + 120);
-    }
-    //Numero P30 Org
-    if (inicio >= 13) {
-        ocultarDiv(246);
-        ocultarDiv('prg_' + 246);
-        ocultarDiv('res_' + 246);
-    }*/
+     //Numero P31 Individuo
+     if (fin < 13) {
+     ocultarDiv(120);
+     ocultarDiv('prg_' + 120);
+     ocultarDiv('res_' + 120);
+     }
+     //Numero P30 Org
+     if (inicio >= 13) {
+     ocultarDiv(246);
+     ocultarDiv('prg_' + 246);
+     ocultarDiv('res_' + 246);
+     }*/
 }
-
+function validar_saltar_automatico(url) {
+    var seccionActual = parseInt(document.getElementById('hdd_seccion').value);
+    var num_pre_inicio = parseInt(document.getElementById('hdd_pre_inicio_' + seccionActual).value);
+    var num_pre_fin = parseInt(document.getElementById('hdd_pre_fin_' + seccionActual).value);
+    var saltoSeccion;
+    saltoSeccion = '0';
+    for (i = num_pre_inicio; i <= num_pre_fin; i++) {
+        //esta visible?
+        if (document.getElementById(i).style.visibility === 'visible' || document.getElementById(i).style.visibility === '') {
+            saltoSeccion = '1';
+        }
+    }
+    if (saltoSeccion === '0') {
+        if(document.getElementById('hdd_seccion_atras').value===''){
+            document.getElementById('hdd_seccion_atras').value=0;
+        }
+        document.getElementById('hdd_seccion_atras').value = parseInt(document.getElementById('hdd_seccion_atras').value) + 1;
+        document.getElementById('hdd_seccion').value = parseInt(document.getElementById('hdd_seccion').value) + 1;
+        cambiarVisibilidad();
+    }
+}
 function saltar_seccion(url) {
     var num_sec = parseInt(document.getElementById('hdd_seccion').value);
     var fin = parseInt(document.getElementById('hdd_fin').value);
@@ -185,31 +208,42 @@ function devolver_seccion() {
             var sec = 'sec_' + i;
             ocultarDiv(sec);
         }
-        mostrarDiv('sec_' + (num_sec - 1));
-        document.getElementById('hdd_seccion').value = num_sec - 1;
+        
+        alert(document.getElementById('hdd_seccion_atras').value);
+        document.getElementById('hdd_seccion').value = num_sec - 1 - parseInt(document.getElementById('hdd_seccion_atras').value);
+        mostrarDiv('sec_' + (document.getElementById('hdd_seccion').value));
+        document.getElementById('hdd_seccion_atras').value = parseInt(0);
     }
 }
 
 function ocultar_preguntas(arreglo_preguntas) {
     arreglo_preguntas = arreglo_preguntas.split("/");
-    for (j = 0; j < (arreglo_preguntas.length ); j++) {
+    for (j = 0; j < (arreglo_preguntas.length); j++) {
         ocultarDiv(arreglo_preguntas[j]);
         ocultarDiv('prg_' + arreglo_preguntas[j]);
         ocultarDiv('res_' + arreglo_preguntas[j]);
     }
+    var seccionActual = parseInt(document.getElementById('hdd_seccion').value);
+    var num_pre_inicio = parseInt(document.getElementById('hdd_pre_inicio_' + seccionActual).value);
+    var num_pre_fin = parseInt(document.getElementById('hdd_pre_fin_' + seccionActual).value);
     //P16 individuos
-    for (i = 60; i <= 65; i++) {
-        if (document.getElementById(i).value !== '') {
-            for (i = 66; i <= 71; i++) {
-                ocultarDiv(i);
-                ocultarDiv('prg_' + i);
-                ocultarDiv('res_' + i);
+    if (num_pre_inicio <= 60 && 60 >= num_pre_fin){
+        for (i = 60; i <= 65; i++) {
+            if (document.getElementById(i).value !== '') {
+                for (i = 66; i <= 71; i++) {
+                    ocultarDiv(i);
+                    ocultarDiv('prg_' + i);
+                    ocultarDiv('res_' + i);
+                }
             }
         }
     }
 }
 
 function saltar_pregunta_onChange(idPregunta, arreglo_saltos, tipo) {
+    if (document.getElementById('error_pregunta_' + idPregunta).style.visibility !== 'hidden') {
+        ocultarDiv('error_pregunta_' + idPregunta);
+    }
     arreglo_saltos = arreglo_saltos.split("/");
     var id_salto;
     var maxPregunta = arreglo_saltos[1];
@@ -225,7 +259,7 @@ function saltar_pregunta_onChange(idPregunta, arreglo_saltos, tipo) {
     }
     else if (tipo === '3') {
         var verifica = false;
-        for (j = 0; j <arreglo_saltos.length; j += 2) {
+        for (j = 0; j < arreglo_saltos.length; j += 2) {
             if (document.getElementById(idPregunta).value === arreglo_saltos[j] && document.getElementById('hdd_checked_' + idPregunta).value !== 'checked') {
                 id_salto = parseInt(arreglo_saltos[j + 1]);
                 document.getElementById('hdd_checked_' + idPregunta).value = 'checked';
@@ -243,13 +277,13 @@ function saltar_pregunta_onChange(idPregunta, arreglo_saltos, tipo) {
     }
     else if (tipo === '1') {
         var verifica = false;
-        if (document.getElementById(idPregunta).value !== '' && document.getElementById('hdd_checked_'+idPregunta).value !== 'checked') {
+        if (document.getElementById(idPregunta).value !== '' && document.getElementById('hdd_checked_' + idPregunta).value !== 'checked') {
             id_salto = parseInt(arreglo_saltos[1]);
-            document.getElementById('hdd_checked_'+idPregunta).value = 'checked';
+            document.getElementById('hdd_checked_' + idPregunta).value = 'checked';
             verifica = true;
         }
         if (verifica === false) {
-            document.getElementById('hdd_checked_'+idPregunta).value = '';
+            document.getElementById('hdd_checked_' + idPregunta).value = '';
         }
     }
     else if (tipo === '5') {
@@ -307,21 +341,28 @@ function saltar_pregunta_onChange(idPregunta, arreglo_saltos, tipo) {
 function save_seccion(url) {
     //Pregunta Desarrollo de la encuesta obligatoria
     var num_sec = parseInt(document.getElementById('hdd_seccion').value);
-    if (num_sec === 8) {
-        if (document.getElementById('141').value == '-1') {
-            mostrarDiv('error_pregunta_141');
-            return false;
+    var num_pre_inicio = parseInt(document.getElementById('hdd_pre_inicio_' + num_sec).value);
+    var num_pre_fin = parseInt(document.getElementById('hdd_pre_fin_' + num_sec).value);
+
+    for (i = num_pre_inicio; i <= num_pre_fin; i++) {
+        //esta visible?
+        if (document.getElementById(i).style.visibility === 'visible' || document.getElementById(i).style.visibility === '') {
+            if (document.getElementById(i).value === '' || document.getElementById(i).value === '-1') {
+                mostrarDiv('error_pregunta_' + i);
+                return false;
+            }
         }
     }
-    if (num_sec === 25) {
-        if (document.getElementById('267').value == '-1') {
-            mostrarDiv('error_pregunta_267');
-            return false;
-        }
-    }
+    //validar edad
     if (num_sec === 15) {
         if ((parseInt(document.getElementById('170').value)) <= 0 || (parseInt(document.getElementById('170').value)) > 99) {
             mostrarDiv('error_pregunta_170');
+            return false;
+        }
+    }
+    if (num_sec === 3) {
+        if ((parseInt(document.getElementById('9').value)) <= 0 || (parseInt(document.getElementById('9').value)) > 99) {
+            mostrarDiv('error_pregunta_9');
             return false;
         }
     }
@@ -330,11 +371,11 @@ function save_seccion(url) {
     document.getElementById('frm_encuesta').submit();
 
 }
-function importar_excel_ejecucion(form,url){
+function importar_excel_ejecucion(form, url) {
     document.getElementById(form).action = '?mod=ejecucion&task=carga&niv=1&id_element=' + url;
     document.getElementById(form).submit();
 }
-function validar_carga_ejecucion(url){
+function validar_carga_ejecucion(url) {
     if (document.getElementById('file_documento_carga').value == '') {
         mostrarDiv('error_documento_carga');
         return false;

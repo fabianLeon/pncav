@@ -18,18 +18,20 @@ class CEjecucionData {
     function CEjecucionData($db) {
         $this->db = $db;
     }
+
     /*
      * Obtiene el numero de ejes existenes
      */
 
     function getNumeroEjes() {
-        $sql = "select count(*) from eje " ;
+        $sql = "select count(*) from eje ";
         $r = ($this->db->ejecutarConsulta($sql));
         if ($r) {
             $w = mysql_fetch_array($r);
             return $w['count(*)'];
         }
     }
+
     /*
      * Obtiene el numero total de encuestas ejecutadas en cada tipo de eje
      */
@@ -39,9 +41,9 @@ class CEjecucionData {
         $arreglo = null;
         $resumen = null;
         $total = null;
-        $numeroEjes=  $this->getNumeroEjes();
+        $numeroEjes = $this->getNumeroEjes();
         $divisorTotal = $numeroEjes;
-        while ($contadorEje <= $numeroEjes) {  
+        while ($contadorEje <= $numeroEjes) {
             $sql = "SELECT pla.eje_id, count(*) FROM encuesta enc left join planeacion pla on pla.pla_id=enc.pla_id 
                     left join eje eje on eje.eje_id = pla.eje_id 
                     left join encuesta_estado ess on ess.ees_id = enc.ees_id 
@@ -120,7 +122,7 @@ class CEjecucionData {
                 $encuesta[$cont]['id_element'] = $w['enc_id'];
                 $encuesta[$cont]['consecutivo'] = $w['enc_consecutivo'];
                 $encuesta[$cont]['eje'] = $w['eje_nombre'];
-                $encuesta[$cont]['documento_soporte'] = "<a href='././soportes/EJECUCION/" . $w['pla_id'] . "/" . $w['enc_documento_soporte'] . "' target='_blank'>{$w['enc_documento_soporte']}</a>";
+                $encuesta[$cont]['documento_soporte'] = "<a href='././soportes/EJECUCION/" . $w['enc_consecutivo'] . "/" . $w['enc_documento_soporte'] . "' target='_blank'>{$w['enc_documento_soporte']}</a>";
                 $encuesta[$cont]['fecha'] = $w['enc_fecha'];
                 $encuesta[$cont]['ecc'] = $w['ecc_nombre'];
                 $encuesta[$cont]['motivo_ci'] = $w['enc_motivo_cuestionario_incorrecto'];
@@ -550,13 +552,14 @@ class CEjecucionData {
         }
         return $opciones;
     }
+
     /*
      * Devuelve la cantidad de preguntas de una encuesta dependiendo del consecutivo de la encuesta
      */
-    
+
     function cantidadPreByConsecutivoEncuesta($consecutivo) {
         $sql = "select count(*) from instrumento_pregunta ipr, (select max(ise_id)as maximo , min(ise_id)as minimo from instrumento_seccion where ins_id =(select ins_id from eje where eje_id =(select eje_id from planeacion where pla_id=(SELECT `pla_id` FROM `encuesta` "
-                . " WHERE `enc_consecutivo`= ".$consecutivo." )))) val where ipr.ise_id <= val.maximo && ipr.ise_id >= val.minimo";
+                . " WHERE `enc_consecutivo`= " . $consecutivo . " )))) val where ipr.ise_id <= val.maximo && ipr.ise_id >= val.minimo";
         //echo $sql;
         $r = ($this->db->ejecutarConsulta($sql));
         if ($r) {
@@ -564,8 +567,9 @@ class CEjecucionData {
             return $w['count(*)'];
         }
     }
+
     function tipoEncuestaByConsecutivoEncuesta($consecutivo) {
-        $sql = "select ins_id from eje where eje_id =(select eje_id from planeacion where pla_id=(SELECT `pla_id` FROM `encuesta` WHERE `enc_consecutivo`= ".$consecutivo." ))";
+        $sql = "select ins_id from eje where eje_id =(select eje_id from planeacion where pla_id=(SELECT `pla_id` FROM `encuesta` WHERE `enc_consecutivo`= " . $consecutivo . " ))";
         //echo $sql;
         $r = ($this->db->ejecutarConsulta($sql));
         if ($r) {
@@ -573,6 +577,7 @@ class CEjecucionData {
             return $w['ins_id'];
         }
     }
+
     /*
      * Obtiene todos los datos de una encuesta especifica, recibe el id
      */
@@ -585,4 +590,31 @@ class CEjecucionData {
             return $w['enc_id'];
         }
     }
+
+    /*
+     * obtener el municipio,departamento y region del id de la encuesta
+     */
+
+    function getRDMByEncuestaId($id) {
+        $opciones=null;
+        $sql = "select der.der_nombre, d.dep_nombre, m.mun_nombre from encuesta enc 
+                left join planeacion pla on pla.pla_id = enc.pla_id 
+                left join municipio m on m.mun_id = pla.mun_id
+                left join departamento d on d.dep_id = m.dep_id 
+                left join departamento_region der on der.der_id=d.der_id 
+                where enc.enc_id = '" . $id . "'";
+        //echo $sql;
+        $r = ($this->db->ejecutarConsulta($sql));
+        if ($r) {
+            $cont = 0;
+            while ($w = mysql_fetch_array($r)) {
+                $opciones[$cont]['region'] = $w['der_nombre'];
+                $opciones[$cont]['departamento'] = $w['dep_nombre'];
+                $opciones[$cont]['municipio'] = $w['mun_nombre'];
+                $cont++;
+            }
+        }
+        return $opciones;
+    }
+
 }

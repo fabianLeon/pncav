@@ -12,6 +12,7 @@
  * @author Brian Kings
  */
 class CEncuesta {
+
     var $id = null;
     var $consecutivo = null;
     var $pla_id = null;
@@ -141,7 +142,7 @@ class CEncuesta {
 
         $r = $this->dd->deleteEncuesta($this->id);
         if ($r == 'true') {
-            unlink(strtolower((RUTA_DOCUMENTOS . "/EJECUCION/" . $this->pla_id . "/")) . $this->documento_soporte);
+            unlink(strtolower((RUTA_DOCUMENTOS . "/EJECUCION/" . $this->getConsecutivo() . "/")) . $this->documento_soporte);
             $msg = EJECUCION_BORRADO;
         } else {
             $msg = ERROR_DE_EJECUCION;
@@ -162,6 +163,7 @@ class CEncuesta {
     /*
      * Almacena los datos de una encuesta en especifico en la clase
      */
+
     function loadEncuesta() {
         $r = $this->dd->getEncuestaById($this->id);
         if ($r != -1) {
@@ -194,6 +196,7 @@ class CEncuesta {
     /*
      * Guarda los datos de una encuesta, sea por primera vez.
      */
+
     function saveEditEncuesta($archivo, $archivo_anterior, $pla_id) {
         $r = "";
         $extension = explode(".", $archivo['name']);
@@ -206,11 +209,11 @@ class CEncuesta {
         }
         if ($archivo['name'] != null) {
             if ($archivo_anterior != NULL) {
-                unlink(strtolower((RUTA_DOCUMENTOS . "/EJECUCION/" . $this->pla_id . "/")) . $archivo_anterior);
+                unlink(strtolower((RUTA_DOCUMENTOS . "/EJECUCION/" . $this->getConsecutivo() . "/")) . $archivo_anterior);
             }
             if ($noMatch == 1) {
                 if ($archivo['size'] < MAX_SIZE_DOCUMENTOS) {
-                    $ruta = (RUTA_DOCUMENTOS . "/EJECUCION/" . $pla_id . "/");
+                    $ruta = (RUTA_DOCUMENTOS . "/EJECUCION/" . $this->getConsecutivo() . "/");
                     $carpetas = explode("/", substr($ruta, 0, strlen($ruta) - 1));
                     $cad = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['PHP_SELF'];
                     $ruta_destino = '';
@@ -261,12 +264,12 @@ class CEncuesta {
      */
 
     function saveRespuestasEncuesta($arreglo) {
-        $this->dd->eliminarRespuestas($this->id);
-        $valores = $valores . "'" . $this->id . "','" . $arreglo[0]['id'] . "','" . $arreglo[0]['respuesta'] . "'),";
+        $this->dd->eliminarRespuestas($this->getId());
+        $valores = $valores . "'" . $this->getId() . "','" . $arreglo[0]['id'] . "','" . $arreglo[0]['respuesta'] . "'),";
         for ($i = 1; $i < (count($arreglo) - 1); $i++) {
-            $valores = $valores . "('" . $this->id . "','" . $arreglo[$i]['id'] . "','" . $arreglo[$i]['respuesta'] . "'),";
+            $valores = $valores . "('" . $this->getId() . "','" . $arreglo[$i]['id'] . "','" . $arreglo[$i]['respuesta'] . "'),";
         }
-        $valores = $valores . "('" . $this->id . "','" . $arreglo[(count($arreglo) - 1)]['id'] . "','" . $arreglo[(count($arreglo) - 1)]['respuesta'] . "'";
+        $valores = $valores . "('" . $this->getId() . "','" . $arreglo[(count($arreglo) - 1)]['id'] . "','" . $arreglo[(count($arreglo) - 1)]['respuesta'] . "'";
         $r = $this->dd->setSaveRespuestasEncuesta($valores);
     }
 
@@ -280,8 +283,30 @@ class CEncuesta {
     }
 
     /*
+     * Almacenar Region, departamento y municipio por defecto
+     */
+
+    function saveRDM() {
+        $tipo_encuesta = 0;
+        $tipo_encuesta = $this->dd->getTipoEncuesta($this->getId());
+        $arreglo=  $this->dd->getRDMByEncuestaId($this->getId());
+        
+        if ($tipo_encuesta == 1) {
+            $valores = $valores . "'" . $this->getId() . "','" . '3' . "','" . $arreglo[0]['region'] . "'),";
+            $valores = $valores . "('" . $this->getId() . "','" . '4' . "','" . $arreglo[0]['departamento'] . "'),";
+            $valores = $valores . "('" . $this->getId() . "','" . '5' . "','" . $arreglo[0]['municipio'] . "'";
+        } else if ($tipo_encuesta == 2) {
+            $valores = $valores . "'" . $this->getId() . "','" . '161' . "','" . $arreglo[0]['region'] . "'),";
+            $valores = $valores . "('" . $this->getId() . "','" . '162' . "','" . $arreglo[0]['departamento'] . "'),";
+            $valores = $valores . "('" . $this->getId() . "','" . '163' . "','" . $arreglo[0]['municipio'] . "'";
+        }
+        $r = $this->dd->setSaveRespuestasEncuesta($valores);
+    }
+
+    /*
      * Importar encuestas
      */
+
     function cargaMasiva($file_carga) {
         require_once './clases/Excel/reader.php';
         $data = new Spreadsheet_Excel_Reader();
@@ -292,81 +317,81 @@ class CEncuesta {
         //obtener la cantidad de preguntas
         $cantidadPreguntas = $this->dd->cantidadPreByConsecutivoEncuesta($data->sheets[0]['cells'][1][3]);
         //if ($cantidadPreguntas == ($filas - 1)) {
-            //desplazamiento entre columnas
-            for ($i = 3; $i <= $columnas; $i++) {
-                //Pertenece al tipo de encuesta dada la cantidad de filas
-                $tipoEncuesta = $this->dd->tipoEncuestaByConsecutivoEncuesta($data->sheets[0]['cells'][1][$i]);
-                $this->setId($this->dd->getEncuestaIdByConsecutivo($data->sheets[0]['cells'][1][$i]));
-                //desplazamiento entre filas
-                $secciones = $this->dd->getSecciones($tipoEncuesta);
-                $cont = 0;
-                echo $data->sheets[0]['cells'][15][3];
-                foreach ($secciones as $s) {
-                    $preguntas_base = $this->dd->getPreguntasBaseBySeccion($s['id']);
-                    foreach ($preguntas_base as $pb) {
-                        $repuestas[$cont]['id'] = null;
-                        $repuestas[$cont]['respuesta'] = null;
-                        switch ($pb['tipo']) {
-                            case 1:
-                                $resp = null;
-                                $resp = $data->sheets[0]['cells'][$cont + 2][$i];
-                                $repuestas[$cont]['id'] = $pb['id'];
-                                if ($resp == 'Si') {
-                                    $repuestas[$cont]['respuesta'] = '1';
-                                } else {
-                                    $repuestas[$cont]['respuesta'] = '';
+        //desplazamiento entre columnas
+        for ($i = 3; $i <= $columnas; $i++) {
+            //Pertenece al tipo de encuesta dada la cantidad de filas
+            $tipoEncuesta = $this->dd->tipoEncuestaByConsecutivoEncuesta($data->sheets[0]['cells'][1][$i]);
+            $this->setId($this->dd->getEncuestaIdByConsecutivo($data->sheets[0]['cells'][1][$i]));
+            //desplazamiento entre filas
+            $secciones = $this->dd->getSecciones($tipoEncuesta);
+            $cont = 0;
+            echo $data->sheets[0]['cells'][15][3];
+            foreach ($secciones as $s) {
+                $preguntas_base = $this->dd->getPreguntasBaseBySeccion($s['id']);
+                foreach ($preguntas_base as $pb) {
+                    $repuestas[$cont]['id'] = null;
+                    $repuestas[$cont]['respuesta'] = null;
+                    switch ($pb['tipo']) {
+                        case 1:
+                            $resp = null;
+                            $resp = $data->sheets[0]['cells'][$cont + 2][$i];
+                            $repuestas[$cont]['id'] = $pb['id'];
+                            if ($resp == 'Si') {
+                                $repuestas[$cont]['respuesta'] = '1';
+                            } else {
+                                $repuestas[$cont]['respuesta'] = '';
+                            }
+                            break;
+                        //selección
+                        case 2:
+                            $contRespuestasMxM = null;
+                            $contRespuestasMxM = $this->dd->getOpcionesPreguntas($pb['id']);
+                            $temp = 0;
+                            $repuestas[$cont]['id'] = $pb['id'];
+                            while ($temp < count($contRespuestasMxM)) {
+                                if ($contRespuestasMxM[$temp]['nombre'] == $data->sheets[0]['cells'][$cont + 2][$i]) {
+                                    //guardar respuestas seleccionadas
+                                    $repuestas[$cont]['respuesta'] = ($contRespuestasMxM[$temp]['id']);
                                 }
-                                break;
-                            //selección
-                            case 2:
-                                $contRespuestasMxM=null;
-                                $contRespuestasMxM = $this->dd->getOpcionesPreguntas($pb['id']);
-                                $temp = 0;
-                                $repuestas[$cont]['id'] = $pb['id'];
-                                while ($temp < count($contRespuestasMxM)) {
-                                    if ($contRespuestasMxM[$temp]['nombre'] == $data->sheets[0]['cells'][$cont + 2][$i]) {
+                                $temp++;
+                            }
+                            break;
+                        //seleccion multiple
+                        case 3:
+                            $contRespuestasMxM = null;
+                            $resp = null;
+                            $resp = explode("+", ($data->sheets[0]['cells'][$cont + 2][$i]));
+                            $contRespuestasMxM = $this->dd->getOpcionesPreguntas($pb['id']);
+                            $temp = 0;
+                            $respuesta = null;
+                            while ($temp < (count($contRespuestasMxM))) {
+                                $tempRespuesta = null;
+                                for ($m = 0; $m < count($resp); $m++) {
+                                    if (($temp + 1) == $resp[$m]) {
                                         //guardar respuestas seleccionadas
-                                        $repuestas[$cont]['respuesta'] = ($contRespuestasMxM[$temp]['id']);
+                                        $tempRespuesta = $contRespuestasMxM[$temp]['id'];
                                     }
-                                    $temp++;
                                 }
-                                break;
-                            //seleccion multiple
-                            case 3:
-                                $contRespuestasMxM=null;
-                                $resp = null;
-                                $resp = explode("+", ($data->sheets[0]['cells'][$cont + 2][$i]));
-                                $contRespuestasMxM = $this->dd->getOpcionesPreguntas($pb['id']);
-                                $temp = 0;
-                                $respuesta=null;
-                                while ($temp < (count($contRespuestasMxM))) {
-                                    $tempRespuesta = null;
-                                    for ($m = 0; $m < count($resp); $m++) {
-                                        if (($temp+1) == $resp[$m]) {
-                                            //guardar respuestas seleccionadas
-                                            $tempRespuesta = $contRespuestasMxM[$temp]['id'];
-                                        }
-                                    }
-                                    $respuesta = $respuesta . $tempRespuesta . '/';
-                                    $temp++;
-                                }
-                                $repuestas[$cont]['id'] = $pb['id'];
-                                $repuestas[$cont]['respuesta'] = $respuesta;
-                                break;
-                            case 7:
-                                $repuestas[$cont]['id'] = $pb['id'];
-                                $repuestas[$cont]['respuesta'] = $this->obtenerFechaFormato($data->sheets[0]['cells'][$cont + 2][$i]); //Se inicia en la tercera columna
-                                break;
-                            default :
-                                $repuestas[$cont]['id'] = $pb['id'];
-                                $repuestas[$cont]['respuesta'] = $data->sheets[0]['cells'][$cont + 2][$i]; //Se inicia en la tercera columna
-                                break;
-                        }
-                        $cont++;
+                                $respuesta = $respuesta . $tempRespuesta . '/';
+                                $temp++;
+                            }
+                            $repuestas[$cont]['id'] = $pb['id'];
+                            $repuestas[$cont]['respuesta'] = $respuesta;
+                            break;
+                        case 7:
+                            $repuestas[$cont]['id'] = $pb['id'];
+                            $repuestas[$cont]['respuesta'] = $this->obtenerFechaFormato($data->sheets[0]['cells'][$cont + 2][$i]); //Se inicia en la tercera columna
+                            break;
+                        default :
+                            $repuestas[$cont]['id'] = $pb['id'];
+                            $repuestas[$cont]['respuesta'] = $data->sheets[0]['cells'][$cont + 2][$i]; //Se inicia en la tercera columna
+                            break;
                     }
+                    $cont++;
                 }
-                $this->saveRespuestasEncuesta($repuestas);
             }
+            $this->saveRespuestasEncuesta($repuestas);
+        }
         //}
         return 'Carga Exitosa';
     }
